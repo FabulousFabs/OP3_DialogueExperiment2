@@ -193,8 +193,8 @@ jsPsych.plugins['conversation-pcg'] = (function(){
           '<div id="naming">'+
               '<div id="instruction"></div>'+
               '<div id="stimulus-container">'+
-                  '<img id="stimulus-left" src="" />'+
-                  '<img id="stimulus-right" src="" />'+
+                  '<img id="stimulus-left" src="" width="60%" height="60%" />'+
+                  '<img id="stimulus-right" src="" width="60%" height="60%" />'+
               '</div>'+
               '<div id="status"></div>'+
               '<progress id="progress" value="0" max="100"></progress>'+
@@ -273,8 +273,8 @@ jsPsych.plugins['conversation-pcg'] = (function(){
             '<div id="naming">'+
                 '<div id="instruction"></div>'+
                 '<div id="stimulus-container">'+
-                    '<img id="stimulus-left" src="" />'+
-                    '<img id="stimulus-right" src="" />'+
+                    '<img id="stimulus-left" src="" width="60%" height="60%" />'+
+                    '<img id="stimulus-right" src="" width="60%" height="60%" />'+
                 '</div>'+
             '</div>'
         );
@@ -450,7 +450,7 @@ var generalInstructions = {
       '<p>Je gaat nu beginnen aan de tweede taak van het onderzoek.</p>' +
       '<p>In deze taak voer je een gesprek met een \'digitale partner\'. Jullie zullen om en om prijsvergelijkingen maken tussen twee objecten. Probeer dit als volgt te doen: “X is cheaper than Y”, of “X is more expensive than Y”, waarbij X het links staande object is en Y dat op de rechter afbeelding. Maak gebruik van de prijsbepalingen die je hebt gemaakt in de eerste taak, en probeer daarbij consistent te blijven. Onthoud dat er geen goed of fout antwoord is.</p>' +
       '<p>Deze taak is wederom in het Engels.</p>',
-      '<p>Trials waarbij het jouw beurt is om te praten, zal jouw antwoord automatisch opgenomen worden zodra beide objecten gepresenteerd worden. Dit wordt aangegeven door een “Stop recording” knop die onderaan je scherm zal verschijnen. Klik alsjeblieft op de knop “Opname stoppen” wanneer je klaar bent met het spreken van jouw prijsvergelijking. Nadat de opname is opgeslagen kun je op de knop “Verdergaan” klikken om verder te gaan met de andere trials. Nogmaals, als je een pauze nodig hebt, doe dit dan voordat je op “Verdergaan” klikt.</p>' +
+      '<p>In trials waarbij het jouw beurt is om te praten, zal jouw antwoord automatisch opgenomen worden zodra beide objecten gepresenteerd worden. Dit wordt aangegeven door een “Opname stoppen” knop die onderaan je scherm zal verschijnen. Klik alsjeblieft op de knop “Opname stoppen” wanneer je klaar bent met het spreken van jouw prijsvergelijking. Nadat de opname is opgeslagen kun je op de knop “Verdergaan” klikken om verder te gaan met de andere trials. Nogmaals, als je een pauze nodig hebt, doe dit dan voordat je op “Verdergaan” klikt.</p>' +
       '<p>Voor trials waarbij het jouw beurt is om te luisteren, gebruik dan de \'M\'-toets op je toetsenbord wanneer je het eens bent met de prijsvergelijking van de ander, gebruik de \'Z\'-toets als je het niet eens bent met de ander. De volgende trial zal beginnen zodra je een antwoord hebt gegeven.</p>'
     ],
     show_clickable_nav: true,

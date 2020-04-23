@@ -50,7 +50,8 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
         "timestamp": $('#consent-question-time').val(),
         "question_future_studies": $('input[name="consent-question-future"]:checked').val(),
         "question_recordings": $('input[name="consent-question-recordings"]:checked').val(),
-        "question_study": $('input[name="consent-question-study"]:checked').val()
+        //"question_study": $('input[name="consent-question-study"]:checked').val(),
+        "question_agree": $('input[name="consent-question-agree"]:checked').val()
       };
 
       if (submission.name.length < 1) {
@@ -71,15 +72,15 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
         return;
       }
 
-      if ([trial.audio_recordings, trial.video_recordings, trial.photo_recordings].includes(true)) {
+      /*if ([trial.audio_recordings, trial.video_recordings, trial.photo_recordings].includes(true)) {
         if (typeof(submission.question_recordings) == 'undefined' || !['YES', 'NO'].includes(submission.question_recordings)) {
           $('#btn-done').prop('disabled', false);
           alert('Please, make a choice whether collected recordings can be made public beyond the scope of this study.');
           return;
         }
-      }
+      }*/
 
-      if (typeof(submission.question_study) == 'undefined' || !['YES', 'NO'].includes(submission.question_study)) {
+      /*if (typeof(submission.question_study) == 'undefined' || !['YES', 'NO'].includes(submission.question_study)) {
         $('#btn-done').prop('disabled', false);
         alert('Please, make a choice whether you want to consent to participating in this study.');
         return;
@@ -88,6 +89,12 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
       if (submission.question_study != 'YES') {
         $('#btn-done').prop('disabled', false);
         alert('You cannot participate in this study without giving consent. If you do not wish to participate in this study, you can close this window.');
+        return;
+      }*/
+
+      if (typeof(submission.question_agree) == 'undefined' || submission.question_agree != 'CHECKED') {
+        $('#btn-done').prop('disabled', false);
+        alert('You cannot participate in this study if you do not agree to the information provided.');
         return;
       }
 
@@ -130,7 +137,7 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
             '<li>The connection between my personal and research data is stored until maximally one month after finalization of this study.</li>' +
             '<li>Demographic data or data concerning my health, background or preferences is collected for scientific purposes.</li>' +
             '<li id="additional-consent-agree"></li>' +
-            '<li>My not directly identifiable experimental data will be made public for verification, re-use and/or replication.</li>' +
+            '<li>My not directly identifiable experimental data (i.e., excluding audio recordings) may be made public for verification, re-use and/or replication.</li>' +
             '<li>Regulatory authorities can access my data for verification purposes.</li>' +
           '</ul>' +
         '</div>' +
@@ -153,18 +160,21 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
           '<span style="float: right;"><input type="radio" id="consent-question-recordings-yes" name="consent-question-recordings" value="YES"><label for="consent-question-recordings-yes">&nbsp;YES&nbsp;</label>' +
           '<input type="radio" id="consent-question-recordings-no" name="consent-question-recordings" value="NO"><label for="consent-question-recordings-no">&nbsp;NO&nbsp;</label></span>' +
         '</div>' +
-        '<div id="consent-question-study" align="left" style="font-size: 11px;">' +
+        /*'<div id="consent-question-study" align="left" style="font-size: 11px;">' +
           'I give consent to take part in this experiment.&nbsp;&nbsp;&nbsp;' +
           '<span style="float: right;"><input type="radio" id="consent-question-study-yes" name="consent-question-study" value="YES"><label for="consent-question-study-yes">&nbsp;YES&nbsp;</label>' +
           '<input type="radio" id="consent-question-study-no" name="consent-question-study" value="NO"><label for="consent-question-study-no">&nbsp;NO&nbsp;</label></span>' +
-        '</div><br />' +
+        '</div>' +*/
+        '<br />' +
         '<div id="consent-question-sign" align="center" style="font-size: 11px;">' +
           '<span style="float: left;">Full name: <input type="text" id="consent-question-name" name="consent-question-name"></span>' +
           '<span>Date of birth (dd/mm/yy): <input type="text" id="consent-question-date" name="consent-question-date" maxlength="8"></span>' +
           '<span style="float: right;">Timestamp: <input type="text" id="consent-question-time" name="consent-question-time" value="" disabled></span>' +
         '</div><br />' +
-        '<div id="controls">' +
-            '<button id="btn-done" class="jspsych-btn">Submit</button>' +
+        '<div id="controls" align="center" style="font-size: 11px;">' +
+            '<input type="checkbox" id="consent-question-agree" name="consent-question-agree" value="CHECKED">' +
+            '<label for="consent-question-agree">&nbsp;&nbsp;&nbsp;I agree to the information above and want to participate in this study.</label>' +
+            '<br /> <br /><button id="btn-done" class="jspsych-btn">Submit</button>' +
         '</div>' +
         '<br />' +
       '</div>'
@@ -185,7 +195,8 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
     if (trial.photo_recordings) { d = true; r.push('Photo'); }
     if (d) {
       additionalConsentExplanation.html(r.join(' and ') + ' recordings are made, in order to ' + trial.reason_recordings + '.');
-      additionalConsentQuestionText.html('I agree that collected potential identifiable ' + r.join(' and ') + ' recordings will be made public beyond the scope of this study.');
+      //additionalConsentQuestionText.html('I agree that collected potential identifiable ' + r.join(' and ') + ' recordings will be made public beyond the scope of this study.');
+      additionalConsentQuestion.hide();
     }
     else {
       additionalConsentExplanation.hide();
@@ -215,7 +226,7 @@ if (list_number === undefined) {
 var consent = {
   type: 'donders-style-informed-consent',
   audio_recordings: true,
-  reason_recordings: 'analyze differences in second language acquisition'
+  reason_recordings: 'be able to code the responses'
 };
 
 var moveOn = function() {

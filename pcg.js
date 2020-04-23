@@ -332,13 +332,24 @@ var recordTestPrompt = {
     },
 }
 
+var experimentInstructions = {
+  type: 'instructions',
+  pages: [
+    '<p><b>Welkom!</b></p>' +
+    '<p>Beste proefpersoon, van harte bedankt voor je deelname aan dit experiment. Het is een studie over de subjectieve waarde van voorwerpen en de stabiliteit ervan. Je zult in verschillende taken prijsschattingen maken en prijsvergelijkingen maken of beluisteren. Het experiment wordt in het Engels gedaan, ten eerste om de studie met mensen met verschillende moedertalen te kunnen uitvoeren, en ten tweede omdat niet alle betrokken onderzoekers Nederlanders praten.</p>',
+
+    '<p><b>Technische Informaties</b></p>' +
+    '<p>In dit experiment zullen audio-opnames gemaakt worden van jouw antwoorden. Als je gevraagd wordt om toestemming te geven voor het gebruik van de microfoon van je computer, klik dan alsjeblieft op “Allow” en “Remember this decision”. Dankjewel!</p>' +
+    '<p>Als je tijdens het experiment technische problemen hebt (als je bijvoorbeeld plotseling geen verbinding hebt met het internet of als je browser vastloopt), open het experiment dan opnieuw in dezelfde browser. Het experiment laat de instructies dan opnieuw zien en gaat door met de taak waar je gebleven was. Als je andere problemen hebt, neem dan contact op met de onderzoekers.</p>'
+  ],
+  show_clickable_nav: true,
+  button_label_next: "Verdergaan",
+  button_label_previous: "Vorige",
+}
+
 var generalInstructions = {
     type: 'instructions',
     pages: [
-      '<p><b>Welkom!</b></p>' +
-      '<p>In dit experiment zullen audio-opnames gemaakt worden van jouw antwoorden. Als je gevraagd wordt om toestemming te geven voor het gebruik van de microfoon van je computer, klik dan alsjeblieft op “Allow” en “Remember this decision”. Dankjewel!</p>' +
-      '<p>Als je tijdens het experiment technische problemen hebt (als je bijvoorbeeld plotseling geen verbinding hebt met het internet of als je browser vastloopt), open het experiment dan opnieuw in dezelfde browser. Het experiment laat de instructies dan opnieuw zien en gaat door met de taak waar je gebleven was. Als je andere problemen hebt, neem dan contact op met de onderzoekers.</p>',
-
       '<p><b>Taak 1 uit 3</b></p>' +
       '<p>Je gaat nu beginnen aan de eerste taak van het onderzoek.</p>' +
       '<p>In deze taak is het de bedoeling dat je voor verschillende objecten op afbeeldingen een prijsschatting doet in het Engels. B.v. zie je een afbeelding van een roos dan zou je kunnen zeggen: “A rose costs 1 Euro”. Als je het Engelse woord voor het object niet kent, probeer het dan alsnog met andere woorden te omschrijven. Er is geen goed of fout antwoord, we zijn puur in je subjectieve inschattingen geïnteresseerd. Probeer de door jou genoemde prijzen te onthouden voor de volgende taken.</p>',
@@ -391,7 +402,7 @@ if (jsPsych.data.urlVariables()['reset']) {
 var thanks = {
 	type: "html-button-response",
     //stimulus: '<p>You have completed task one!<br><br><a href="experiment2.html?ppn=' + ppn + '&list=' + list_number + '">Please, click here to proceed with the second task.</a></p>',
-    stimulus: '<p>Je bent nu klaar met de eerste taak! Neem even een korte pauze.<br><br><a href="experiment2.html?ppn=' + ppn + '&list=' + list_number + '">Wanneer je er klaar voor bent, kun je hier klikken om door te gaan met de twee taak.</a></p>',
+    stimulus: '<p>Je bent nu klaar met de eerste taak! Neem even een korte pauze.<br><br><a href="experiment2.html?ppn=' + ppn + '&list=' + list_number + '">Wanneer je er klaar voor bent, kun je hier klikken om door te gaan met de tweede taak.</a></p>',
     choices: [],
 }
 
@@ -415,7 +426,7 @@ var realTrials = makeTrialsFromImages(realImages, lastImageIndex, imgDir, ppn);
 // Make timeline
 var timeline = [];
 if (practiceTrials.length > 0 || realTrials.length > 0) {
-    timeline = timeline.concat(recordTestPrompt, generalInstructions);
+    timeline = timeline.concat(experimentInstructions, recordTestPrompt, generalInstructions);
 }
 if (practiceTrials.length > 0) {
     timeline = timeline.concat(practiceTrialsInstruction, practiceTrials);
