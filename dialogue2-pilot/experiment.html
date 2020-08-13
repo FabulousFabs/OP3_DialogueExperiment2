@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <title>Picture naming pilot</title>
+		<meta charset="UTF-8">
+
+		<script src="js/jquery-1.11.1.min.js"></script>
+
+		<script src="jspsych-6.0.3/jspsych.js"></script>
+		<script src="jspsych-6.0.3/plugins/jspsych-instructions.js"></script>
+		<script src="jspsych-6.0.3/plugins/jspsych-html-button-response.js"></script>
+		<script src="jspsych-6.0.3/plugins/jspsych-call-function.js"></script>
+
+		<script src="js/stimuli.js"></script>
+
+		<link href="jspsych-6.0.3/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+		<link href="style.css" rel="stylesheet" type="text/css"></link>
+		<style type="text/css">
+
+			#naming {
+
+			}
+			#naming #instruction {
+
+			}
+			#naming #stimulus-container {
+				background-color:white;
+				width:500px;
+				height:500px;
+				display:flex;
+				align-items: center;
+				justify-content:center;
+				margin: 14px;
+			}
+			#naming #stimulus-container #boxes {
+				max-width: 150px;
+				width: 150px;
+			}
+			#naming #stimulus-container #stimulus {
+				max-width: 350px;
+				max-height: 350px;
+			}
+			label {
+				font-size: 10px;
+				font-style: italic;
+			}
+			#naming #status {
+				font-size: 14px;
+			}
+			#naming #progress {
+
+			}
+			#naming #controls {
+				margin: 14px;
+			}
+			#naming #controls button {
+				margin-right: 14px;
+			}
+
+
+		</style>
+	</head>
+	<body>
+		<script src="js/pilot.js?20200620"></script>
+	</body>
+</html>
