@@ -139,7 +139,7 @@ jsPsych.plugins['pilot-production'] = (function(){
 		display_element.innerHTML = '';
 		container.appendTo(display_element);
 
-		instructions.html("<b>Picture Naming:</b> " + trial.index + " out of " + trial.final);
+		instructions.html("<b>Picture Naming:</b> " + trial.index + "  of " + trial.final);
 		stimulus.attr('src', trial.imgDir + "/" + trial.imgFile);
 		btnContinue.on('click', handleContinue);
 
@@ -159,7 +159,15 @@ jsPsych.plugins['pilot-reception'] = (function(){
 	jsPsych.pluginAPI.registerPreload('pilot-reception', 'stimulus', 'image');
 
 	var txt = {
-
+		Q1: '1) Is this how you named the picture earlier?',
+		Q2: '2) Do you know the word?',
+		Q3: '3) Do you think this is an appropriate name for the picture?',
+		Q4: '4) Do you think this is primarily an American or British English word?',
+		A0: 'YES',
+		A1: 'NO',
+		A2: 'American English',
+		A3: 'British English',
+		btnContinue: 'Continue'
 	};
 
 	var plugin = {};
@@ -215,14 +223,208 @@ jsPsych.plugins['pilot-reception'] = (function(){
 				pretty_name: 'Stimulus alternative name',
 				description: 'Lexical alternative we are testing in this context.'
 			}
-		};
-
-		plugin.trial = function(display_element, trial) {
-
-		};
-
-		return plugin;
+		}
 	};
+
+	plugin.trial = function(display_element, trial) {
+		console.log("Working on trial ", trial);
+
+		var data = {
+			ppn: trial.ppn,
+			ppl: trial.ppl,
+			block: trial.block,
+			index: trial.index,
+			imgDir: trial.imgDir,
+			imgFile: trial.imgFile,
+			alternative: trial.alternative,
+			choseWord: -1,
+			knowsWord: -1,
+			appropriateWord: -1,
+			abeWord: -1
+		};
+
+		var handleCheckbox = function() {
+      // in the handler, 'this' refers to the box clicked on
+      var $box = $(this);
+      if ($box.is(":checked")) {
+        // the name of the box is retrieved using the .attr() method
+        // as it is assumed and expected to be immutable
+        var group = "input:checkbox[name='" + $box.attr("name") + "']";
+        // the checked state of the group/box on the other hand will change
+        // and the current value is retrieved using .prop() method
+        $(group).prop("checked", false);
+        $box.prop("checked", true);
+      } else {
+        $box.prop("checked", false);
+      }
+    };
+
+		var handleClear = function() {
+			question.html('');
+			cb1_label.html('');
+			cb2_label.html('');
+			cb1_input.val('');
+			cb2_input.val('');
+		};
+
+		var handleUnselect = function() {
+			$('input[name="p-rcp-cb"]:checked').prop('checked', false);
+		};
+
+		var handleQ1 = function() {
+			data.choseWord = $('input[name="p-rcp-cb"]:checked').val();
+
+			if (typeof(data.choseWord) === undefined || ![txt.A0, txt.A1].includes(data.choseWord)) {
+				data.choseWord = -1;
+				alert('Please, indicate whether or not this is how you named the picture earlier.');
+				return;
+			}
+
+			btnContinue.off();
+			btnContinue.prop('disabled', true);
+			handleClear();
+
+			if (data.choseWord == txt.A1) {
+				handleUnselect();
+				question.html(txt.Q2);
+				cb1_label.html(txt.A0 + "&nbsp;");
+				cb2_label.html("&nbsp;" + txt.A1);
+				cb1_input.val(txt.A0);
+				cb2_input.val(txt.A1);
+				btnContinue.on('click', handleQ2);
+				btnContinue.prop('disabled', false);
+			} else {
+				endTrial();
+			}
+		};
+
+		var handleQ2 = function() {
+			data.knowsWord = $('input[name="p-rcp-cb"]:checked').val();
+
+			if (typeof(data.knowsWord) === undefined || ![txt.A0, txt.A1].includes(data.knowsWord)) {
+				data.knowsWord = -1;
+				alert('Please, indicate whether or not you know this word.');
+				return;
+			}
+
+			btnContinue.off();
+			btnContinue.prop('disabled', true);
+			handleClear();
+
+			if (data.knowsWord == txt.A0) {
+				handleUnselect();
+				question.html(txt.Q3);
+				cb1_label.html(txt.A0 + "&nbsp;");
+				cb2_label.html("&nbsp;" + txt.A1);
+				cb1_input.val(txt.A0);
+				cb2_input.val(txt.A1);
+				btnContinue.on('click', handleQ3);
+				btnContinue.prop('disabled', false);
+			} else {
+				endTrial();
+			}
+		};
+
+		var handleQ3 = function() {
+			data.appropriateWord = $('input[name="p-rcp-cb"]:checked').val();
+
+			if (typeof(data.appropriateWord) === undefined || ![txt.A0, txt.A1].includes(data.appropriateWord)) {
+				data.appropriateWord = -1;
+				alert('Please, indicate whether or not you think this is an appropriate word for the picture.');
+				return;
+			}
+
+			btnContinue.off();
+			btnContinue.prop('disabled', true);
+			handleClear();
+
+			if (data.appropriateWord == txt.A0) {
+				handleUnselect();
+				question.html(txt.Q4);
+				cb1_label.html(txt.A2 + "&nbsp;");
+				cb2_label.html("&nbsp;" + txt.A3);
+				cb1_input.val(txt.A2);
+				cb2_input.val(txt.A3);
+				btnContinue.on('click', handleQ4);
+				btnContinue.prop('disabled', false);
+			} else {
+				endTrial();
+			}
+		};
+
+		var handleQ4 = function() {
+			data.abeWord = $('input[name="p-rcp-cb"]:checked').val();
+
+			if (typeof(data.abeWord) === undefined || ![txt.A2, txt.A3].includes(data.abeWord)) {
+				data.abeWord = -1;
+				alert('Please, indicate whether you think this is primarily an American or British English term.');
+				return;
+			}
+
+			btnContinue.off();
+			btnContinue.prop('disabled', true);
+			handleClear();
+			handleUnselect();
+
+			data.abeWord = data.abeWord == txt.A0 ? 0 : 1; // 0 = AE, 1 = BE, -1 no entry
+
+			endTrial();
+		};
+
+		var endTrial = function() {
+			jsPsych.pluginAPI.clearAllTimeouts();
+			display_element.innerHTML = '';
+			jsPsych.finishTrial(data);
+		};
+
+		var container = $(
+			'<div id="naming">' +
+				'<div id="instruction"></div>' +
+				'<div id="pl-cont">' +
+					'<div id="stimulus-container" align="left" style="float: left; width: 350px;">' +
+						'<img id="stimulus" src="" />' +
+					'</div>' +
+					'<div id="boxes" align="center" style="float: right; width: 250px; font-size: 12px;">' +
+						'<br /><br /><br /><br /><br />' +
+						'<p align="center" id="p-rcp-w"></p>' +
+						'<p align="center" id="p-rcp-q"></p>' +
+						'<label for="p-rcp-a1-cb" id="p-rcp-a1-lb"></label><input type="checkbox" id="p-rcp-a1-cb" name="p-rcp-cb" value="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="p-rcp-a2-cb" name="p-rcp-cb" value=""><label for="p-rcp-a2-cb" id="p-rcp-a2-lb"></label>' +
+					'</div>' +
+				'</div>' +
+				'<div id="controls" style="float: none;">' +
+					'<p><button id="btn-continue" class="jspsych-btn" style="margin-top: 25px;">' + txt.btnContinue + '</button></p>' +
+				'</div>' +
+			'</div>'
+		);
+
+		var instructions = container.find('#instruction');
+		var stimulus = container.find('#stimulus');
+		var boxes = container.find('#boxes');
+		var word = boxes.find('#p-rcp-w');
+		var question = boxes.find('#p-rcp-q');
+		var cb1_label = boxes.find('#p-rcp-a1-lb');
+		var cb2_label = boxes.find('#p-rcp-a2-lb');
+		var cb1_input = boxes.find('#p-rcp-a1-cb');
+		var cb2_input = boxes.find('#p-rcp-a2-cb');
+		var checkBoxes = container.find('input:checkbox');
+		var btnContinue = container.find('#btn-continue');
+
+		display_element.innerHTML = '';
+		container.appendTo(display_element);
+
+		instructions.html("<b>Name rating:</b> " + trial.index + " of " + trial.final);
+		stimulus.attr('src', trial.imgDir + "/" + trial.imgFile);
+		word.html('<b>Proposed name for object:</b> <i>' + trial.alternative + '</i>');
+		checkBoxes.on('click', handleCheckbox);
+		question.html(txt.Q1);
+		cb1_label.html(txt.A0 + "&nbsp;");
+		cb2_label.html("&nbsp;" + txt.A1);
+		cb1_input.val(txt.A0);
+		cb2_input.val(txt.A1);
+		btnContinue.on('click', handleQ1);
+	};
+
+	return plugin;
 })();
 
 // Initialize global variables
@@ -363,10 +565,41 @@ var exitProduction = {
 var instructionsReception = {
 	type: 'instructions',
 	pages: [
-		
+		'<p><b>Task 2 of 2: Name rating</b></p>' +
+		'<p>In the following, you will be shown a picture of an object on the left. On the right, you will be offered a name for that object. Your task will then be classifying that name for this particular object as follows:</p>' +
+		'<p>First, is this how I named the picture in the previous task? If no...</p>' +
+		'<p>Secondly, do you know the particular word? If yes...</p>' +
+		'<p>Thirdly, do you think this is an appropriate word for this picture? If yes...</p>' +
+		'<p>Lastly, do you think this word is primarily used in American or British English?</p>',
+		'<p><b>Task 2 of 2: Name rating</b></p>' +
+		'<p>Please, remember that you cannot make use of a dictionary or any other such resources in this task, too. This is because we are interested in your particular use of language rather than correct responses. In fact, there are no right or wrong answers in this experiment and a lack of a response will be more helpful to us than a response that was looked up.</p>'
 	],
 	show_clickable_nav: true,
 	button_label_next: 'Next',
+	button_label_previous: 'Previous'
+};
+
+var exitReception = {
+	type: 'instructions',
+	pages: [
+		'<p><b>Task 2 of 2: Completed.</b></p>' +
+		'<p>You have completed both tasks of the experiment. Thanks very much for your participation!</p>' +
+		'<p>You can now close this window.</p>'
+	],
+	show_clickable_nav: true,
+	button_label_next: 'Exit',
+	button_label_previous: 'Previous'
+}
+
+var exitDone = {
+	type: 'instructions',
+	pages: [
+		'<p><b>All done.</b></p>' +
+		'<p>You have completed both tasks of the experiment. Thanks very much for your participation!</p>' +
+		'<p>You can now close this window.</p>'
+	],
+	show_clickable_nav: true,
+	button_label_next: 'Exit',
 	button_label_previous: 'Previous'
 };
 
@@ -418,6 +651,38 @@ if (relevantStimuliProduction.length > 0) {
 
 if (relevantStimuliReception.length > 0) {
 	timeline.push(instructionsReception);
+
+	var blockLastR = relevantStimuliReception[0][1];
+
+	relevantStimuliReception.map(function(entry){
+		if (entry[1] != blockLastR) {
+			timeline.push(instructionsBlock);
+			blockLastR = entry[1];
+		}
+
+		if (!preload.includes(imgDir + "/" + entry[2])) {
+			preload.push(imgDir + "/" + entry[2]);
+		}
+
+		timeline.push({
+			type: 'pilot-reception',
+			ppn: ppn,
+			ppl: ppl,
+			block: entry[1],
+			index: entry[0],
+			final: relevantStimuliReception[relevantStimuliReception.length-1][0],
+			imgDir: imgDir,
+			imgFile: entry[2],
+			alternative: entry[3]
+		});
+	});
+
+	timeline.push(exitReception);
+}
+
+if (relevantStimuliProduction.length <= 0 && relevantStimuliReception.length <= 0) {
+	timeline = [];
+	timeline.push(exitDone);
 }
 
 if (localStorage.getItem("informedConsentGiven_pilot") != "yes") {

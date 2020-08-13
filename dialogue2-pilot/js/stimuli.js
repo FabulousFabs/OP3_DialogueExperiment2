@@ -4,4 +4,8 @@ stimuli_production = [
 	[3, 1, "monkey-chimp.png"]
 ];
 
-stimuli_reception = [];
+stimuli_reception = [
+	[1, 1, "apron.png", "pinny"],
+	[2, 1, "lilly-flower.png", "lilly"],
+	[3, 1, "monkey-chimp.png", "gorilla"]
+];
