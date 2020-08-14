@@ -57,6 +57,12 @@ jsPsych.plugins['pilot-production'] = (function(){
 				default: undefined,
 				pretty_name: 'Stimulus image',
 				description: 'Source image used for this particular stimulus.'
+			},
+			realId: {
+				type: jsPsych.plugins.parameterType.INT,
+				default: 0,
+				pretty_name: 'Real stimulus id',
+				description: 'Stimulus ID regardless of the order of the list.'
 			}
 		}
 	};
@@ -69,6 +75,7 @@ jsPsych.plugins['pilot-production'] = (function(){
 			ppl: trial.ppl,
 			block: trial.block,
 			index: trial.index,
+			id: trial.realId,
 			imgDir: trial.imgDir,
 			imgFile: trial.imgFile,
 			nameDutch: [],
@@ -139,7 +146,7 @@ jsPsych.plugins['pilot-production'] = (function(){
 		display_element.innerHTML = '';
 		container.appendTo(display_element);
 
-		instructions.html("<b>Picture Naming:</b> " + trial.index + "  of " + trial.final);
+		instructions.html("<b>Picture Naming:</b> " + trial.index + "  of " + trial.final + "<p style='font-size: 12px;'>How would you name this picture?</p>");
 		stimulus.attr('src', trial.imgDir + "/" + trial.imgFile);
 		btnContinue.on('click', handleContinue);
 
@@ -159,14 +166,15 @@ jsPsych.plugins['pilot-reception'] = (function(){
 	jsPsych.pluginAPI.registerPreload('pilot-reception', 'stimulus', 'image');
 
 	var txt = {
-		Q1: '1) Is this how you named the picture earlier?',
-		Q2: '2) Do you know the word?',
+		Q1: '1) Was this your preferred name for the object earlier?',
+		Q2: '2) Do you know this word?',
 		Q3: '3) Do you think this is an appropriate name for the picture?',
 		Q4: '4) Do you think this is primarily an American or British English word?',
 		A0: 'YES',
 		A1: 'NO',
 		A2: 'American English',
 		A3: 'British English',
+		A4: 'Both/Neither',
 		btnContinue: 'Continue'
 	};
 
@@ -222,6 +230,12 @@ jsPsych.plugins['pilot-reception'] = (function(){
 				default: '',
 				pretty_name: 'Stimulus alternative name',
 				description: 'Lexical alternative we are testing in this context.'
+			},
+			realId: {
+				type: jsPsych.plugins.parameterType.INT,
+				default: 0,
+				pretty_name: 'Real stimulus id',
+				description: 'Stimulus ID regardless of the order of the list.'
 			}
 		}
 	};
@@ -234,6 +248,7 @@ jsPsych.plugins['pilot-reception'] = (function(){
 			ppl: trial.ppl,
 			block: trial.block,
 			index: trial.index,
+			id: trial.realId,
 			imgDir: trial.imgDir,
 			imgFile: trial.imgFile,
 			alternative: trial.alternative,
@@ -287,14 +302,25 @@ jsPsych.plugins['pilot-reception'] = (function(){
 			if (data.choseWord == txt.A1) {
 				handleUnselect();
 				question.html(txt.Q2);
-				cb1_label.html(txt.A0 + "&nbsp;");
+				cb1_label.html("&nbsp;" + txt.A0);
 				cb2_label.html("&nbsp;" + txt.A1);
 				cb1_input.val(txt.A0);
 				cb2_input.val(txt.A1);
 				btnContinue.on('click', handleQ2);
 				btnContinue.prop('disabled', false);
 			} else {
-				endTrial();
+				handleUnselect();
+				question.html(txt.Q4);
+				cb1_label.html("&nbsp;" + txt.A2);
+				cb2_label.html("&nbsp;" + txt.A3);
+				cb3_label.html("&nbsp;" + txt.A4);
+				cb3_label.show();
+				cb1_input.val(txt.A2);
+				cb2_input.val(txt.A3);
+				cb3_input.val(txt.A4);
+				cb3_input.show();
+				btnContinue.on('click', handleQ4);
+				btnContinue.prop('disabled', false);
 			}
 		};
 
@@ -314,7 +340,7 @@ jsPsych.plugins['pilot-reception'] = (function(){
 			if (data.knowsWord == txt.A0) {
 				handleUnselect();
 				question.html(txt.Q3);
-				cb1_label.html(txt.A0 + "&nbsp;");
+				cb1_label.html("&nbsp;" + txt.A0);
 				cb2_label.html("&nbsp;" + txt.A1);
 				cb1_input.val(txt.A0);
 				cb2_input.val(txt.A1);
@@ -341,10 +367,14 @@ jsPsych.plugins['pilot-reception'] = (function(){
 			if (data.appropriateWord == txt.A0) {
 				handleUnselect();
 				question.html(txt.Q4);
-				cb1_label.html(txt.A2 + "&nbsp;");
+				cb1_label.html("&nbsp;" + txt.A2);
 				cb2_label.html("&nbsp;" + txt.A3);
+				cb3_label.html("&nbsp;" + txt.A4);
+				cb3_label.show();
 				cb1_input.val(txt.A2);
 				cb2_input.val(txt.A3);
+				cb3_input.val(txt.A4);
+				cb3_input.show();
 				btnContinue.on('click', handleQ4);
 				btnContinue.prop('disabled', false);
 			} else {
@@ -355,7 +385,7 @@ jsPsych.plugins['pilot-reception'] = (function(){
 		var handleQ4 = function() {
 			data.abeWord = $('input[name="p-rcp-cb"]:checked').val();
 
-			if (typeof(data.abeWord) === undefined || ![txt.A2, txt.A3].includes(data.abeWord)) {
+			if (typeof(data.abeWord) === undefined || ![txt.A2, txt.A3, txt.A4].includes(data.abeWord)) {
 				data.abeWord = -1;
 				alert('Please, indicate whether you think this is primarily an American or British English term.');
 				return;
@@ -366,7 +396,7 @@ jsPsych.plugins['pilot-reception'] = (function(){
 			handleClear();
 			handleUnselect();
 
-			data.abeWord = data.abeWord == txt.A0 ? 0 : 1; // 0 = AE, 1 = BE, -1 no entry
+			data.abeWord = data.abeWord == txt.A2 ? 0 : data.abeWord == txt.A3 ? 1 : 2; // 0 = AE, 1 = BE, 2 = b/n, -1 no entry
 
 			endTrial();
 		};
@@ -385,10 +415,12 @@ jsPsych.plugins['pilot-reception'] = (function(){
 						'<img id="stimulus" src="" />' +
 					'</div>' +
 					'<div id="boxes" align="center" style="float: right; width: 250px; font-size: 12px;">' +
-						'<br /><br /><br /><br /><br />' +
+						'<br /><br /><br />' +
 						'<p align="center" id="p-rcp-w"></p>' +
 						'<p align="center" id="p-rcp-q"></p>' +
-						'<label for="p-rcp-a1-cb" id="p-rcp-a1-lb"></label><input type="checkbox" id="p-rcp-a1-cb" name="p-rcp-cb" value="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="p-rcp-a2-cb" name="p-rcp-cb" value=""><label for="p-rcp-a2-cb" id="p-rcp-a2-lb"></label>' +
+						'<input type="checkbox" id="p-rcp-a1-cb" name="p-rcp-cb" value=""><label for="p-rcp-a1-cb" id="p-rcp-a1-lb"></label><br/>' +
+						'<input type="checkbox" id="p-rcp-a2-cb" name="p-rcp-cb" value=""><label for="p-rcp-a2-cb" id="p-rcp-a2-lb"></label><br/>' +
+						'<input type="checkbox" id="p-rcp-a3-cb" name="p-rcp-cb" value=""><label for="p-rcp-a3-cb" id="p-rcp-a3-lb"></label>' +
 					'</div>' +
 				'</div>' +
 				'<div id="controls" style="float: none;">' +
@@ -404,8 +436,10 @@ jsPsych.plugins['pilot-reception'] = (function(){
 		var question = boxes.find('#p-rcp-q');
 		var cb1_label = boxes.find('#p-rcp-a1-lb');
 		var cb2_label = boxes.find('#p-rcp-a2-lb');
+		var cb3_label = boxes.find('#p-rcp-a3-lb');
 		var cb1_input = boxes.find('#p-rcp-a1-cb');
 		var cb2_input = boxes.find('#p-rcp-a2-cb');
+		var cb3_input = boxes.find('#p-rcp-a3-cb');
 		var checkBoxes = container.find('input:checkbox');
 		var btnContinue = container.find('#btn-continue');
 
@@ -417,10 +451,14 @@ jsPsych.plugins['pilot-reception'] = (function(){
 		word.html('<b>Proposed name for object:</b> <i>' + trial.alternative + '</i>');
 		checkBoxes.on('click', handleCheckbox);
 		question.html(txt.Q1);
-		cb1_label.html(txt.A0 + "&nbsp;");
+		cb1_label.html("&nbsp;" + txt.A0);
 		cb2_label.html("&nbsp;" + txt.A1);
+		cb3_label.html('');
+		cb3_label.hide();
 		cb1_input.val(txt.A0);
 		cb2_input.val(txt.A1);
+		cb3_input.val('');
+		cb3_input.hide();
 		btnContinue.on('click', handleQ1);
 	};
 
@@ -531,18 +569,18 @@ var instructionsProduction = {
 					'<p><b>Task 1 of 2: Name the pictures</b></p>' +
 					'<p>What is critical is that, in doing this, you put down the names of the object in the order that they occur to you.</p>' +
 					'<p>So, please put down what occurs to you first in the very top box, then put down what occurs to you second in the second box, and so on and so forth.</p>' +
-					'<p>Please, hit \'Next\' whenever you are ready to start with task one.</p>'
+					'<p>Please hit \'Next\' whenever you are ready to start with task one.</p>'
 				]
 				:
 				[
 					'<p><b>Task 1 of 2: Name the pictures</b></p>' +
-					'<p>In the following, you will be shown images of everyday objects. Your job is two fold:</p>' +
+					'<p>In the following, you will be shown images of everyday objects. Your job is twofold:</p>' +
 					'<p>First, please fill in the text box to the right with the Dutch name of the object. For example, if you see a picture of a <i>wallet</i>, fill in <i>portemonnee</i>.</p>' +
 					'<p>Secondly, in the text box below that, name the object spontaneously in English. As you fill in the name, another text box will pop up beneath that. If you can think of another way to name the object in English, please fill in that other name in the new text box. This will continue until you run out of names for this particular object. Whenever that happens, feel free to move on to the next object by hitting \'Continue\'.</p>',
 					'<p><b>Task 1 of 2: Name the pictures</b></p>' +
 					'<p>What is critical is that, in doing this, you put down the English names of the object in the order that they occur to you.</p>' +
 					'<p>So, please put down what occurs to you first in the very top English box, then put down what occurs to you second in the second box, and so on and so forth.</p>' +
-					'<p>Please, hit \'Next\' whenever you are ready to start with task one.</p>'
+					'<p>Please hit \'Next\' whenever you are ready to start.</p>'
 				]
 		),
 	show_clickable_nav: true,
@@ -550,11 +588,24 @@ var instructionsProduction = {
 	button_label_previous: 'Previous'
 };
 
+var practiceProduction = {
+	type: 'instructions',
+	pages: [
+		'<p><b>Task 1 of 2: Name the pictures</b></p>' +
+		'<p>The following three trials will be practice trials so you can familiarise yourself with the procedure.</p>' +
+		'<p>There will be a brief break after the practice trials before the task continues.</p>' +
+		'<p>Please hit \'Start\’ whenever you are ready.</p>'
+	],
+	show_clickable_nav: true,
+	button_label_next: 'Start',
+	button_label_previous: 'Previous'
+};
+
 var exitProduction = {
 	type: 'instructions',
 	pages: [
 		'<p><b>Task 1 of 2: Completed.</b></p>' +
-		'<p>You have completed the first task. Please, take a quick break before continuing with the experiment.</p>' +
+		'<p>You have completed the first task. Please take a quick break before continuing with the experiment.</p>' +
 		'<p>Whenever you are ready, hit \'Continue\' to move on to the next task.</p>'
 	],
 	show_clickable_nav: true,
@@ -566,13 +617,13 @@ var instructionsReception = {
 	type: 'instructions',
 	pages: [
 		'<p><b>Task 2 of 2: Name rating</b></p>' +
-		'<p>In the following, you will be shown a picture of an object on the left. On the right, you will be offered a name for that object. Your task will then be classifying that name for this particular object as follows:</p>' +
-		'<p>First, is this how I named the picture in the previous task? If no...</p>' +
-		'<p>Secondly, do you know the particular word? If yes...</p>' +
-		'<p>Thirdly, do you think this is an appropriate word for this picture? If yes...</p>' +
-		'<p>Lastly, do you think this word is primarily used in American or British English?</p>',
+		'<p>In the following, some of the pictures you have already seen in part one will be presented on the left. On the right, you will be offered a name for that object. Your task will then be to classify that name for this particular object as follows:</p>' +
+		'<p>First, is this how I named the picture in the previous task? If no, continue. If yes, skip to four.</p>' +
+		'<p>Secondly, do you know the particular word? If yes, continue.</p>' +
+		'<p>Thirdly, do you think this is an appropriate word for this picture? If yes, continue.</p>' +
+		'<p>Lastly, do you think this word is primarily used in American or British English or both/neither?</p>',
 		'<p><b>Task 2 of 2: Name rating</b></p>' +
-		'<p>Please, remember that you cannot make use of a dictionary or any other such resources in this task, too. This is because we are interested in your particular use of language rather than correct responses. In fact, there are no right or wrong answers in this experiment and a lack of a response will be more helpful to us than a response that was looked up.</p>'
+		'<p>Please remember that you cannot make use of a dictionary or any other such resources in this task, too. This is because we are interested in your particular use of language rather than correct responses. In fact, there are no right or wrong answers in this experiment and a lack of a response will be more helpful to us than a response that was looked up.</p>'
 	],
 	show_clickable_nav: true,
 	button_label_next: 'Next',
@@ -627,6 +678,10 @@ if (relevantStimuliProduction.length > 0) {
 
 	var blockLast = relevantStimuliProduction[0][1];
 
+	if (blockLast === 0) {
+		timeline.push(practiceProduction);
+	}
+
 	relevantStimuliProduction.map(function(entry){
 		if (entry[1] != blockLast) {
 			timeline.push(instructionsBlock);
@@ -642,7 +697,8 @@ if (relevantStimuliProduction.length > 0) {
 			index: entry[0],
 			final: relevantStimuliProduction[relevantStimuliProduction.length-1][0],
 			imgDir: imgDir,
-			imgFile: entry[2]
+			imgFile: entry[2],
+			realId: entry[3]
 		});
 	});
 
@@ -673,7 +729,8 @@ if (relevantStimuliReception.length > 0) {
 			final: relevantStimuliReception[relevantStimuliReception.length-1][0],
 			imgDir: imgDir,
 			imgFile: entry[2],
-			alternative: entry[3]
+			alternative: entry[3],
+			realId: entry[4]
 		});
 	});
 
