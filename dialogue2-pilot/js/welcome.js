@@ -23,7 +23,7 @@ var greetings = {
 		'<p><b>Technical brief</b></p>' +
 		'<p>Before continuing with the experiment, please make sure that you are running and up-to-date version of Google Chrome, Mozilla Firefox, Safari or Microsoft Edge as your browser, as the experiment will run smoothly only on these. Should you be running a different browser, please switch to one of the supported browsers (see above) and simply reopen this page in that browser.</p>' +
 		'<p>Further, should your browser ever freeze or crash or should the tab ever be closed for any other reason, you can simply reopen the experiment in the same browser and start right where you left off.</p>' +
-		'<p>Should you run into any persistent issues, please contact one of the researchers.</p>' +
+		'<p>Should you run into any persistent issues, please contact Fabian Schneider at <a href="mailto:f.schneider@donders.ru.nl?subject=OP3%20pilot%20technical%20difficulties%20with%20ppl' + ppl + '">f.schneider@donders.ru.nl</a>.</p>' +
 		'<p>Please hit \'Continue\' to complete the informed consent form.</p>'
 	],
 	show_clickable_nav: true,

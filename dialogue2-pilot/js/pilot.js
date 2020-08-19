@@ -63,6 +63,12 @@ jsPsych.plugins['pilot-production'] = (function(){
 				default: 0,
 				pretty_name: 'Real stimulus id',
 				description: 'Stimulus ID regardless of the order of the list.'
+			},
+			typeS: {
+				type: jsPsych.plugins.parameterType.STRING,
+				default: 'NA',
+				pretty_name: 'Stimulus type',
+				description: 'Type of the stimulus being presented, i.e. the manipulation.'
 			}
 		}
 	};
@@ -79,7 +85,8 @@ jsPsych.plugins['pilot-production'] = (function(){
 			imgDir: trial.imgDir,
 			imgFile: trial.imgFile,
 			nameDutch: [],
-			namesEnglish: []
+			namesEnglish: [],
+			typeS: trial.typeS
 		};
 
 		var responseBoxes = (trial.ppl == 1 ? -1 : 0);
@@ -236,6 +243,12 @@ jsPsych.plugins['pilot-reception'] = (function(){
 				default: 0,
 				pretty_name: 'Real stimulus id',
 				description: 'Stimulus ID regardless of the order of the list.'
+			},
+			typeS: {
+				type: jsPsych.plugins.parameterType.STRING,
+				default: 'NA',
+				pretty_name: 'Stimulus type',
+				description: 'The type of the particular stimulus, i.e. the stimulus manipulation.'
 			}
 		}
 	};
@@ -255,7 +268,8 @@ jsPsych.plugins['pilot-reception'] = (function(){
 			choseWord: -1,
 			knowsWord: -1,
 			appropriateWord: -1,
-			abeWord: -1
+			abeWord: -1,
+			typeS: trial.typeS
 		};
 
 		var handleCheckbox = function() {
@@ -642,11 +656,28 @@ var exitReception = {
 	button_label_previous: 'Previous'
 }
 
+var exitTasks = {
+	type: 'instructions',
+	pages: [
+		'<p><b>Tasks completed</b></p>' +
+		'<p>You have completed both tasks. Thanks!</p>' +
+		'<p>Before you go, please take a couple of minutes to fill in the questionnaire on the following pages.</p>' +
+		'<p>Whenever you are ready, please hit \'To the questionnaire\'.</p>'
+	],
+	show_clickable_nav: true,
+	button_label_next: 'To the questionnaire',
+	button_label_previous: 'Previous'
+};
+
 var exitDone = {
 	type: 'instructions',
 	pages: [
+		'<p><b>Debrief</b></p>' +
+		'<p>Thank you again for your participation. As already stated in the beginning, we are interested in word use by native and non-native speakers of English. In particular, you might have noticed that some objects tend to have different names in British versus American English (for example, cookie / biscuit); other objects have synonymous names regardless of English variant (for example, couch / sofa). We need to know the naming preferences of different speaker populations for these objects in order to be able to use them in a future study on word alignment (i.e., taking words over from another person in a conversation).</p>' +
+		'<p>The study has been approved by the Ethical Committee of the Faculty of Social Sciences, Radboud University, Nijmegen.</p>' +
+		'<p>Should you have any comments on or questions about the experiment, please contact the senior researcher, Kristin Lemhöfer, at <a href="mailto:k.lemhofer@donders.ru.nl">k.lemhofer@donders.ru.nl</a>.</p>',
 		'<p><b>All done.</b></p>' +
-		'<p>You have completed both tasks of the experiment. Thanks very much for your participation!</p>' +
+		'<p>You have completed the experiment. Thanks very much for your participation!</p>' +
 		'<p>You can now close this window.</p>'
 	],
 	show_clickable_nav: true,
@@ -698,7 +729,8 @@ if (relevantStimuliProduction.length > 0) {
 			final: relevantStimuliProduction[relevantStimuliProduction.length-1][0],
 			imgDir: imgDir,
 			imgFile: entry[2],
-			realId: entry[3]
+			realId: entry[3],
+			typeS: entry[4]
 		});
 	});
 
@@ -730,7 +762,8 @@ if (relevantStimuliReception.length > 0) {
 			imgDir: imgDir,
 			imgFile: entry[2],
 			alternative: entry[3],
-			realId: entry[4]
+			realId: entry[4],
+			typeS: entry[5]
 		});
 	});
 
