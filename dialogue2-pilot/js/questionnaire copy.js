@@ -39,264 +39,7 @@ jsPsych.plugins['pilot-questionnaire'] = (function(){
 
 			if (ppl == 1) {
 				// dutch participants
-				var data = {
-					// preexisting data
-					ppn: ppn,
-					ppl: ppl,
-					// block 1
-					answers_age: $('#q-1-age').val(),
-					answers_gender: $('#q-1-gender option:checked').val(),
-					answers_mother_tongue: $('#q-1-mt option:checked').val(),
-					answers_mother_tongue_other: $('#q-1-mt-other').val(),
-					answers_occupation: $('#q-1-occupation option:checked').val(),
-					answers_qualification: $('#q-1-education option:checked').val(),
-					// block 2
-					answers_aoe: $('#q-2-aoe').val(),
-					answers_aoe_way: $('#q-2-fe').val(),
-					answers_yoe: $('#q-2-yoe').val(),
-					answers_grades: $('#q-2-grades option:checked').val(),
-					answers_reading: $('input[name=q-2-english-reading]:checked').val(),
-					answers_listening: $('input[name=q-2-english-listening]:checked').val(),
-					answers_speaking: $('input[name=q-2-english-speaking]:checked').val(),
-					answers_writing: $('input[name=q-2-english-writing]:checked').val(),
-					answers_proficiency: $('input[name=q-2-english-self]:checked').val(),
-					// block 3
-					answers_glad: $('input[name=q-3-glad]:checked').val(),
-					answers_wish: $('input[name=q-3-wish]:checked').val(),
-					answers_nervousness: $('input[name=q-3-nervousness]:checked').val(),
-					answers_career: $('input[name=q-3-career]:checked').val(),
-					answers_neuroticism: $('input[name=q-3-neuroticism]:checked').val(),
-					// block 4
-					answers_taught: $('input[name=q-4-taught]:checked').val(),
-					answers_taught_other: $('#q-4-taught-specify').val(),
-					answers_input: $('input[name=q-4-exposure]:checked').val(),
-					answers_input_other: $('input[name=q-4-exposure-specify]').val(),
-					answers_period_USCA: $('#q-4-visit-USCA option:checked').val(),
-					answers_period_USCA_duration: $('#q-4-visit-USCA-duration').val(),
-					answers_period_USCA_ago: $('#q-4-visit-USCA-ago').val(),
-					answers_period_BI: $('#q-4-visit-GBIR option:checked').val(),
-					answers_period_BI_duration: $('#q-4-visit-GBIR-duration').val(),
-					answers_period_BI_ago: $('#q-4-visit-GBIR-ago').val(),
-					// block 5
-					answers_awareness_accent: $('input[name=q-5-awareness]:checked').val(),
-					answers_understanding_accent: $('#q-5-understanding option:checked').val(),
-					answers_closest_accent: $('#q-5-ownaccent option:checked').val(),
-					answers_adaptation_accent: $('input[name=q-5-adaptation]:checked').val(),
-					// block 6
-					answers_awareness_lexicon: $('input[name=q-6-awareness]:checked').val(),
-					answers_understanding_lexicon: $('#q-6-understanding option:checked').val(),
-					answers_closest_lexicon: $('#q-6-ownwords option:checked').val(),
-					answers_adaptation_lexicon: $('input[name=q-6-adaptation]:checked').val(),
-					// block 7
-					answers_affinity: $('input[name=q-7-affinity]:checked').val(),
-					// block 8
-					answers_FL1_name: $('#q-8-FL1').val(),
-					answers_FL1_proficiency: $('input[name=q-8-proficiency-FL1]:checked').val(),
-					answers_FL1_usage: $('input[name=q-8-frequency-FL1]:checked').val(),
-					answers_FL2_name: $('#q-8-FL2').val(),
-					answers_FL2_proficiency: $('input[name=q-8-proficiency-FL2]:checked').val(),
-					answers_FL2_usage: $('input[name=q-8-frequency-FL2]:checked').val(),
-					answers_FL3_name: $('#q-8-FL3').val(),
-					answers_FL3_proficiency: $('input[name=q-8-proficiency-FL3]:checked').val(),
-					answers_FL3_usage: $('input[name=q-8-frequency-FL3]:checked').val()
-				};
 
-				// block 1 checks
-
-				if (data.answers_age.length < 1 || typeof(data.answers_age) === undefined) {
-					alert('Please fill in your age before submitting (1.0).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_mother_tongue == 'Other' && (data.answers_mother_tongue_other.length < 3 || typeof(data.answers_mother_tongue_other) === undefined)) {
-					alert('Since you indicated \'other\', please make sure to fill in your other mother tongues (1.2).');
-					unlockForm();
-					return false;
-				}
-
-				// block 2 checks
-
-				if (data.answers_aoe.length < 1 || typeof(data.answers_aoe) === undefined) {
-					alert('Please fill in your age of exposure before submitting (2.0).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_aoe_way.length < 3 || typeof(data.answers_aoe_way) === undefined) {
-					alert('Please fill in your way of exposure before submitting (2.1).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_yoe.length < 1 || typeof(data.answers_yoe) === undefined) {
-					alert('Please fill in your years of exposure before submitting (2.2).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_reading) === undefined || data.answers_reading == undefined) {
-					alert('Please fill in your amount of reading in English (2.4).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_listening) === undefined || data.answers_listening == undefined) {
-					alert('Please fill in in your amount of listening to English (2.5).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_speaking) === undefined || data.answers_speaking == undefined) {
-					alert('Please fill in your amount of speaking in English (2.6).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_writing) === undefined || data.answers_writing == undefined) {
-					alert('Please fill in your amount of writing in English (2.7).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_proficiency) === undefined || data.answers_proficiency == undefined) {
-					alert('Please fill in your proficiency in English (2.8).');
-					unlockForm();
-					return false;
-				}
-
-				// block 3 checks
-
-				if (typeof(data.answers_glad) === undefined || data.answers_glad == undefined) {
-					alert('Please fill in whether you are glad about speaking English (3.0).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_wish) === undefined || data.answers_wish == undefined) {
-					alert('Please fill in whether you wish to speak perfect English (3.1).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_nervousness) === undefined || data.answers_nervousness == undefined) {
-					alert('Please fill in whether you are nervous about speaking English (3.2).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_career) === undefined || data.answers_career == undefined) {
-					alert('Please fill in whether English is important for your career (3.3).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_neuroticism) === undefined || data.answers_neuroticism == undefined) {
-					alert('Please fill in whether you hate making mistakes in English (3.4).');
-					unlockForm();
-					return false;
-				}
-
-				// block 4 checks
-
-				if (typeof(data.answers_taught) === undefined || data.answers_taught === undefined) {
-					alert('Please fill in the English you were taught in school (4.0).');
-					unlockForm();
-					return false;
-				}
-
-				if ((data.answers_taught == '8' || data.answers_taught == 8) && (data.answers_taught_other.length < 3 || typeof(data.answers_taught_other) === undefined)) {
-					alert('Since you indicated \'other\', please make sure to fill in the variant of English you were taught in school (4.0).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_input) === undefined || data.answers_input === undefined) {
-					alert('Please fill in the English you usually hear (4.1).');
-					unlockForm();
-					return false;
-				}
-
-				if ((data.answers_input == '8' || data.answers_input == 8) && (data.answers_input_other.length < 3 || typeof(data.answers_input_other) === undefined)) {
-					alert('Since you indicated \'other\', please make sure to fill in the variant of English you usually hear (4.1).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_period_USCA == 'Y' && ((data.answers_period_USCA_ago.length < 1 || typeof(data.answers_period_USCA_ago) === undefined) || (data.answers_period_USCA_duration.length < 1 || typeof(data.answers_period_USCA_duration) === undefined))) {
-					alert('Since you indicated that you have spent significant time in the United States or Canada before, please also indicate how long you stayed and how long this was ago (4.2).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_period_BI == 'Y' && ((data.answers_period_BI_ago.length < 1 || typeof(data.answers_period_BI_ago) === undefined) || (data.answers_period_BI_duration.length < 1 || typeof(data.answers_period_BI_duration) === undefined))) {
-					alert('Since you indicated that you have spent significant time in Great Britan or Ireland before, please also indicate how long you stayed and how long this was ago (4.3).');
-					unlockForm();
-					return false;
-				}
-
-				// block 5 checks
-
-				if (typeof(data.answers_awareness_accent) === undefined || data.answers_awareness_accent == undefined) {
-					alert('Please fill in whether you are typically aware of the English accent of speakers (5.0).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_adaptation_accent) === undefined || data.answers_adaptation_accent == undefined) {
-					alert('Please fill in whether you typically try to adapt to the accent of a speaker (5.3).');
-					unlockForm();
-					return false;
-				}
-
-				// block 6 checks
-
-				if (typeof(data.answers_awareness_lexicon) === undefined || data.answers_awareness_lexicon == undefined) {
-					alert('Please fill in whether you are typically aware of the English accent of speakers (6.0).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_adaptation_lexicon) === undefined || data.answers_adaptation_lexicon == undefined) {
-					alert('Please fill in whether you typically try to adapt to the accent of a speaker (6.3).');
-					unlockForm();
-					return false;
-				}
-
-				// block 7 checks
-
-				if (typeof(data.answers_affinity) === undefined || data.answers_affinity == undefined) {
-					alert('Please fill in your affinity for some variant of English (7.0).');
-					unlockForm();
-					return false;
-				}
-
-				// block 8 checks
-				if (data.answers_FL1_name.length > 0 && ((typeof(data.answers_FL1_usage) === undefined || data.answers_FL1_usage === undefined) || (typeof(data.answers_FL1_proficiency) === undefined || data.answers_FL1_proficiency === undefined))) {
-					alert('Since you indicated that you speak another foreign language (#1), please also indicate your proficiency and usage of this language (8.0).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_FL2_name.length > 0 && ((typeof(data.answers_FL2_usage) === undefined || data.answers_FL2_usage === undefined) || (typeof(data.answers_FL2_proficiency) === undefined || data.answers_FL2_proficiency === undefined))) {
-					alert('Since you indicated that you speak another foreign language (#2), please also indicate your proficiency and usage of this language (8.1).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_FL3_name.length > 0 && ((typeof(data.answers_FL3_usage) === undefined || data.answers_FL3_usage === undefined) || (typeof(data.answers_FL3_proficiency) === undefined || data.answers_FL3_proficiency === undefined))) {
-					alert('Since you indicated that you speak another foreign language (#3), please also indicate your proficiency and usage of this language (8.2).');
-					unlockForm();
-					return false;
-				}
-
-				// all good
-
-				console.log(data);
-
-				jsPsych.pluginAPI.clearAllTimeouts();
-				display_element.innerHTML = '';
-				jsPsych.finishTrial(data);
 			} else {
 				// english native participants
 				var data = {
@@ -304,142 +47,35 @@ jsPsych.plugins['pilot-questionnaire'] = (function(){
 					ppn: ppn,
 					ppl: ppl,
 					// block 1
-					answers_age: $('#q-1-age').val(),
-					answers_gender: $('#q-1-gender option:checked').val(),
-					answers_mother_tongue: $('#q-1-mt option:checked').val(),
-					answers_mother_tongue_other: $('#q-1-mt-other').val(),
-					answers_occupation: $('#q-1-occupation option:checked').val(),
-					answers_qualification: $('#q-1-education option:checked').val(),
+					answers_age: null,
+					answers_gender: null,
+					answers_mother_tongues: [],
+					answers_occupation: null,
+					answers_qualification: null,
 					// block 2
-					answers_grew_up_with: $('#q-2-1 option:checked').val(),
-					answers_grew_up_with_other: $('#q-2-1-1').val(),
-					answers_considers_self: $('#q-2-2 option:checked').val(),
-					answers_considers_self_other: $('#q-2-2-1').val(),
-					answers_exposure_to: $('input[name=q-2-3]:checked').val(),
-					answers_exposure_to_other: $('#q-2-3-specify').val(),
-					answers_experience_BE: $('input[name=q-2-4]:checked').val(),
-					answers_trouble_BE: $('input[name=q-2-5]:checked').val(),
-					answers_period_BI: $('#q-2-6 option:checked').val(),
-					answers_period_BI_duration: $('#q-2-6-duration').val(),
-					answers_period_BI_ago: $('#q-2-6-ago').val(),
-					answers_AEBE_awareness: $('input[name=q-2-7]:checked').val(),
-					answers_AEBE_knowledge: $('input[name=q-2-8]:checked').val(),
-					answers_AEBE_usage: $('input[name=q-2-9]:checked').val(),
+					answers_grew_up_with: [],
+					answers_considers_self: [],
+					answers_exposure_to: null,
+					answers_exposure_to_other: null,
+					answers_experience_BE: null,
+					answers_trouble_BE: null,
+					answers_period_BI: null,
+					answers_period_BI_duration: null,
+					answers_period_BI_ago: null,
+					answers_AEBE_awareness: null,
+					answers_AEBE_knowledge: null,
+					answers_AEBE_usage: null,
 					// block 3
-					answers_FL1_name: $('#q-3-FL1').val(),
-					answers_FL1_proficiency: $('input[name=q-3-proficiency-FL1]:checked').val(),
-					answers_FL1_usage: $('input[name=q-3-frequency-FL1]:checked').val(),
-					answers_FL2_name: $('#q-3-FL2').val(),
-					answers_FL2_proficiency: $('input[name=q-3-proficiency-FL2]:checked').val(),
-					answers_FL2_usage: $('input[name=q-3-frequency-FL2]:checked').val(),
-					answers_FL3_name: $('#q-3-FL3').val(),
-					answers_FL3_proficiency: $('input[name=q-3-proficiency-FL3]:checked').val(),
-					answers_FL3_usage: $('input[name=q-3-frequency-FL3]:checked').val()
+					answers_FL1_name: null,
+					answers_FL1_proficiency: null,
+					answers_FL1_usage: null,
+					answers_FL2_name: null,
+					answers_FL2_proficiency: null,
+					answers_FL2_usage: null,
+					answers_FL3_name: null,
+					answers_FL3_proficiency: null,
+					answers_FL3_usage: null
 				};
-
-				// block 1 checks
-
-				if (data.answers_age.length < 1 || typeof(data.answers_age) === undefined) {
-					alert('Please fill in your age before submitting (1.0).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_mother_tongue == 'Other' && (data.answers_mother_tongue_other.length < 3 || typeof(data.answers_mother_tongue_other) === undefined)) {
-					alert('Since you indicated \'other\', please make sure to fill in your other mother tongues (1.2).');
-					unlockForm();
-					return false;
-				}
-
-				// block 2 checks
-
-				if (data.answers_grew_up_with == 'Other' && (data.answers_grew_up_with_other.length < 3 || typeof(data.answers_grew_up_with_other) === undefined)) {
-					alert('Since you indicated \'other / mix\', please make sure to fill in the variant of English you grew up with (2.0).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_considers_self == 'Other' && (data.answers_considers_self_other.length < 3 || typeof(data.answers_grew_up_with_other) === undefined)) {
-					alert('Since you indicated \'other\', please make sure to fill in the variant of English you consider yourself to be a speaker of (2.1).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_exposure_to) === undefined || data.answers_exposure_to === undefined) {
-					alert('Please fill in the English you usually hear (2.2).');
-					unlockForm();
-					return false;
-				}
-
-				if ((data.answers_exposure_to == '8' || data.answers_exposure_to == 8) && (data.answers_exposure_to_other.length < 3 || typeof(data.answers_exposure_to_other) === undefined)) {
-					alert('Since you indicated \'other\', please make sure to fill in the variant of English you usually hear (2.2).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_experience_BE) === undefined || data.answers_experience_BE == undefined) {
-					alert('Please fill in your experience with British English (2.3).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_trouble_BE) === undefined || data.answers_trouble_BE == undefined) {
-					alert('Please fill in whether you have trouble with British English (2.4).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_period_BI == 'Y' && ((data.answers_period_BI_ago.length < 1 || typeof(data.answers_period_BI_ago) === undefined) || (data.answers_period_BI_duration.length < 1 || typeof(data.answers_period_BI_duration) === undefined))) {
-					alert('Since you indicated that you have spent significant time in Great Britan or Ireland before, please also indicate how long you stayed and how long this was ago (2.5).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_AEBE_awareness) === undefined || data.answers_AEBE_awareness === undefined) {
-					alert('Please fill in whether you are aware of word differences between British and American English (2.6).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_AEBE_knowledge) === undefined || data.answers_AEBE_knowledge === undefined) {
-					alert('Please fill in whether you know word differences between British and American English (2.7).');
-					unlockForm();
-					return false;
-				}
-
-				if (typeof(data.answers_AEBE_usage) === undefined || data.answers_AEBE_usage === undefined) {
-					alert('Please fill in whether you use British English words (2.8).');
-					unlockForm();
-					return false;
-				}
-
-				// block 3 checks
-
-				if (data.answers_FL1_name.length > 0 && ((typeof(data.answers_FL1_usage) === undefined || data.answers_FL1_usage === undefined) || (typeof(data.answers_FL1_proficiency) === undefined || data.answers_FL1_proficiency === undefined))) {
-					alert('Since you indicated that you speak another foreign language (#1), please also indicate your proficiency and usage of this language (3.0).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_FL2_name.length > 0 && ((typeof(data.answers_FL2_usage) === undefined || data.answers_FL2_usage === undefined) || (typeof(data.answers_FL2_proficiency) === undefined || data.answers_FL2_proficiency === undefined))) {
-					alert('Since you indicated that you speak another foreign language (#2), please also indicate your proficiency and usage of this language (3.1).');
-					unlockForm();
-					return false;
-				}
-
-				if (data.answers_FL3_name.length > 0 && ((typeof(data.answers_FL3_usage) === undefined || data.answers_FL3_usage === undefined) || (typeof(data.answers_FL3_proficiency) === undefined || data.answers_FL3_proficiency === undefined))) {
-					alert('Since you indicated that you speak another foreign language (#3), please also indicate your proficiency and usage of this language (3.2).');
-					unlockForm();
-					return false;
-				}
-
-				// all good
-
-				console.log(data);
-
-				jsPsych.pluginAPI.clearAllTimeouts();
-				display_element.innerHTML = '';
-				jsPsych.finishTrial(data);
 			}
 		};
 
@@ -1258,10 +894,10 @@ jsPsych.plugins['pilot-questionnaire'] = (function(){
 							'2.5&nbsp;&nbsp;Have you ever spent a longer period of time (>4 weeks) in Great Britain or Ireland?' +
 							'<span style="float: right;"><select name="q-2-6" id="q-2-6" class="qstn-in"><option value="N">NO</option><option value="Y">YES</option></select></span>' +
 							'<br /><br /><br />' +
-							'&nbsp;&nbsp;&nbsp;2.5.1&nbsp;&nbsp;If yes, how long was your stay in months (e.g., <i>6</i>)?' +
+							'&nbsp;&nbsp;&nbsp;2.6.1&nbsp;&nbsp;If yes, how long was your stay in months (e.g., <i>6</i>)?' +
 							'<span style="float: right;"><input type="text" id="q-2-6-duration" name="q-2-6-duration" class="qstn-in" maxlength="3"></span>' +
 							'<br /><br /><br />' +
-							'&nbsp;&nbsp;&nbsp;2.5.2&nbsp;&nbsp;If yes, how many years ago did you stay there (e.g., <i>2</i>)?' +
+							'&nbsp;&nbsp;&nbsp;2.6.2&nbsp;&nbsp;If yes, how many years ago did you stay there (e.g., <i>2</i>)?' +
 							'<span style="float: right;"><input type="text" id="q-2-6-ago" name="q-2-6-ago" class="qstn-in" maxlength="3"></span>' +
 						'</div>' +
 						'<br />' +
@@ -1532,12 +1168,28 @@ function hasCompletedQuestionnaire() {
 	return localStorage.getItem("pilot_questionnaire_done") == "yes";
 }
 
-function completeQuestionnaire() {
-	localStorage.setItem("pilot_questionnaire_done", "yes");
+function getCompletedTrials() {
+	var stored_items = localStorage.getItem("pilot_completed_Q");
+	if (stored_items === null)
+		return [];
+	return stored_items.split(",").map(function(v) {
+		return parseInt(v);
+	});
+}
+
+function isImageCompleted(id) {
+	var current = getCompletedTrials();
+	return !(current.indexOf(id) === -1);
+}
+
+function addCompletedImage(id) {
+	var items = getCompletedTrials();
+	items.push(id);
+	localStorage.setItem("pilot_completed_Q", items.join(','));
 }
 
 function saveData(data, ppn, ppl) {
-    var filename  = "questionnaires_" + ppl + ".dat" // server adds datetime
+    var filename  = "questionnaire_" + ppl + "_" + ppn + "_responses.dat" // server adds datetime
     var jsonData = JSON.stringify(data);
 	$.ajax({
 		type: 'POST',
@@ -1547,7 +1199,8 @@ function saveData(data, ppn, ppl) {
             data: jsonData
         },
 		success: function(output) {
-            completeQuestionnaire();
+            // For picture-naming tasks, store img index in local storage so it can be skipped on page reload
+						addCompletedImage(data.index);
 		}
 	});
 }
