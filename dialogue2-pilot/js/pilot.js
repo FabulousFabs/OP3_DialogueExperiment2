@@ -669,6 +669,15 @@ var exitTasks = {
 	button_label_previous: 'Previous'
 };
 
+var moveOn = function() {
+	document.location.replace("questionnaire.html?ppn="+ppn+"&ppl="+ppl);
+};
+
+var questionnaire = {
+	type: 'call-function',
+	func: moveOn
+};
+
 var exitDone = {
 	type: 'instructions',
 	pages: [
@@ -772,8 +781,11 @@ if (relevantStimuliReception.length > 0) {
 
 if (relevantStimuliProduction.length <= 0 && relevantStimuliReception.length <= 0) {
 	timeline = [];
-	timeline.push(exitDone);
+	//timeline.push(exitDone);
 }
+
+timeline.push(exitTasks);
+timeline.push(questionnaire);
 
 if (localStorage.getItem("informedConsentGiven_pilot") != "yes") {
 	alert('You must have given informed consent to participate in this experiment.');
