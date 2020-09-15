@@ -648,11 +648,11 @@ var exitReception = {
 	type: 'instructions',
 	pages: [
 		'<p><b>Task 2 of 2: Completed.</b></p>' +
-		'<p>You have completed both tasks of the experiment. Thanks very much for your participation!</p>' +
-		'<p>You can now close this window.</p>'
+		'<p>You have completed the second part of the experiment. Thanks very much!</p>' +
+		'<p>It is vital that you do not leave yet, although you may take a short break if you want to.</p>'
 	],
 	show_clickable_nav: true,
-	button_label_next: 'Exit',
+	button_label_next: 'Continue',
 	button_label_previous: 'Previous'
 }
 
@@ -771,8 +771,8 @@ if (relevantStimuliReception.length > 0) {
 			imgDir: imgDir,
 			imgFile: entry[2],
 			alternative: entry[3],
-			realId: entry[4],
-			typeS: entry[5]
+			realId: entry[5],
+			typeS: entry[4]
 		});
 	});
 

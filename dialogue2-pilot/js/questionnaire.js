@@ -1560,10 +1560,8 @@ var exitDone = {
 		'<p><b>Debrief</b></p>' +
 		'<p>Thank you again for your participation. As already stated in the beginning, we are interested in word use by native and non-native speakers of English. In particular, you might have noticed that some objects tend to have different names in British versus American English (for example, cookie / biscuit); other objects have synonymous names regardless of English variant (for example, couch / sofa). We need to know the naming preferences of different speaker populations for these objects in order to be able to use them in a future study on word alignment (i.e., taking words over from another person in a conversation).</p>' +
 		'<p>The study has been approved by the Ethical Committee of the Faculty of Social Sciences, Radboud University, Nijmegen.</p>' +
-		'<p>Should you have any comments on or questions about the experiment, please contact the senior researcher, Kristin Lemhöfer, at <a href="mailto:k.lemhofer@donders.ru.nl">k.lemhofer@donders.ru.nl</a>.</p>',
-		'<p><b>All done.</b></p>' +
-		'<p>You have completed the experiment. Thanks very much for your participation!</p>' +
-		'<p>Please hit \’Exit\' to complete this study.</p>'
+		'<p>Should you have any comments on or questions about the experiment, please contact the senior researcher, Kristin Lemhöfer, at <a href="mailto:k.lemhofer@donders.ru.nl">k.lemhofer@donders.ru.nl</a>.</p>' +
+		'<p>Please hit \’Exit\' to complete this study. <i><b>It is critical that you do this in order to receive credit/compensation.</b></i></p>'
 	],
 	show_clickable_nav: true,
 	button_label_next: 'Exit',
