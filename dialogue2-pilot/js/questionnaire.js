@@ -530,7 +530,7 @@ jsPsych.plugins['pilot-questionnaire'] = (function(){
 					'</div>' +
 					'<br />' +
 					'<div id="q-2-5" align="left" style="font-size: 11px; background: #eee; padding: 15px;">' +
-						'2.5&nbsp;&nbsp;How often do you <b>listen</b> to (spoken) English (including media like movies, radio, podcasts, etc.)?' +
+						'2.5&nbsp;&nbsp;How often do you <b>listen</b> to (spoken) English (including media like movies, radio, podcasts, etc.) in comparison to reading other languages?' +
 						'<br /><br />' +
 						'<table style="width: 770px;" align="center">' +
 							'<tr style="width: 98%;" align="center">' +
@@ -555,7 +555,7 @@ jsPsych.plugins['pilot-questionnaire'] = (function(){
 					'</div>' +
 					'<br />' +
 					'<div id="q-2-6" align="left" style="font-size: 11px; background: #eee; padding: 15px;">' +
-						'2.6&nbsp;&nbsp;How often do you <b>speak</b> English?' +
+						'2.6&nbsp;&nbsp;How often do you <b>speak</b> English in comparison to reading other languages?' +
 						'<br /><br />' +
 						'<table style="width: 770px;" align="center">' +
 							'<tr style="width: 98%;" align="center">' +
@@ -580,7 +580,7 @@ jsPsych.plugins['pilot-questionnaire'] = (function(){
 					'</div>' +
 					'<br />' +
 					'<div id="q-2-7" align="left" style="font-size: 11px; background: #eee; padding: 15px;">' +
-						'2.7&nbsp;&nbsp;How often do you <b>write</b> English?' +
+						'2.7&nbsp;&nbsp;How often do you <b>write</b> English in comparison to reading other languages?' +
 						'<br /><br />' +
 						'<table style="width: 770px;" align="center">' +
 							'<tr style="width: 98%;" align="center">' +
@@ -629,7 +629,7 @@ jsPsych.plugins['pilot-questionnaire'] = (function(){
 						'</table>' +
 					'</div>' +
 				'</p><hr /><br /><br /><br />' +
-				'<p style="color: red;">3&nbsp;&nbsp;&nbsp;MOTIVATION AND ANXIETY</p>' +
+				'<p style="color: red;">3&nbsp;&nbsp;&nbsp;ATTITUDE TOWARDS SPEAKING ENGLISH</p>' +
 				'<hr />' +
 				'<p>' +
 					'<i>In this section, you will be asked questions about your motivation for as well as your levels of anxiety about learning and/or using English. Please note that that all answers are mandatory and must be filled in properly.</i>' +
@@ -902,7 +902,7 @@ jsPsych.plugins['pilot-questionnaire'] = (function(){
 						'</table>' +
 					'</div>' +
 				'</p><hr /><br /><br /><br />' +
-				'<p style="color: red;">6&nbsp;&nbsp;&nbsp;AMERICAN VS. BRITISH ENGLISH: LEXICON</p>' +
+				'<p style="color: red;">6&nbsp;&nbsp;&nbsp;AMERICAN VS. BRITISH ENGLISH: VOCABULARY</p>' +
 				'<hr />' +
 				'<p>' +
 					'<i>In this section, you will be asked questions about differences in word use between American and British English. Please note that all questions are mandatory and must be filled in properly.</i>' +
@@ -1160,7 +1160,7 @@ jsPsych.plugins['pilot-questionnaire'] = (function(){
 			questionnaire = questionnaire.concat('<p style="color: red;">2&nbsp;&nbsp;AMERICAN VS. BRITISH ENGLISH</p>' +
 					'<hr />' +
 					'<p>' +
-						'<i>In this section, you will be asked questions about your experience with and proficiency in English. Please note that that all answers are mandatory and must be filled in properly.</i>' +
+						'<i>In this section, you will be asked questions about your experience with and proficiency in American and British English. Please note that that all answers are mandatory and must be filled in properly, except for 2.1.1, 2.2.1, 2.5.1 and 2.5.2 which must be filled in only if the preceding question has been answered with \'other\' or \'Yes\'.</i>' +
 						'<div id="q-2-1" align="left" style="font-size: 11px; background: #eee; padding: 15px;">' +
 							'2.0&nbsp;&nbsp;Which variant of English did you grow up with primarily?' +
 							'<span style="float: right;"><select name="q-2-1" id="q-2-1" class="qstn-in"><option value="AE">American English</option><option value="BE">British English</option><option value="Other">other / mix (specify below)</option></select></span>' +
@@ -1563,11 +1563,24 @@ var exitDone = {
 		'<p>Should you have any comments on or questions about the experiment, please contact the senior researcher, Kristin Lemhöfer, at <a href="mailto:k.lemhofer@donders.ru.nl">k.lemhofer@donders.ru.nl</a>.</p>',
 		'<p><b>All done.</b></p>' +
 		'<p>You have completed the experiment. Thanks very much for your participation!</p>' +
-		'<p>You can now close this window.</p>'
+		'<p>Please hit \’Exit\' to complete this study.</p>'
 	],
 	show_clickable_nav: true,
 	button_label_next: 'Exit',
 	button_label_previous: 'Previous'
+};
+
+var moveOn = function(){
+	if (ppl == 0) {
+		document.location.replace("https://app.prolific.co/submissions/complete?cc=241B3376"); // prolific forward for study completion
+	} else {
+		 // SONA forward for study completion
+	}
+};
+
+var finishStudy = {
+	type: 'call-function',
+	func: moveOn
 };
 
 // setup experiment
@@ -1579,6 +1592,7 @@ if (!hasCompletedQuestionnaire()) {
 }
 
 timeline.push(exitDone);
+timeline.push(finishStudy);
 
 if (localStorage.getItem("informedConsentGiven_pilot") != "yes") {
 	alert('You must have given informed consent to participate in this study.');
