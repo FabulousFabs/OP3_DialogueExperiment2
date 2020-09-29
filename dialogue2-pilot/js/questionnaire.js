@@ -1598,7 +1598,7 @@ if (!hasCompletedQuestionnaire()) {
 timeline.push(exitDone);
 timeline.push(finishStudy);
 
-if (localStorage.getItem("informedConsentGiven_pilot") != "yes") {
+if (localStorage.getItem("informedConsentGiven_pilot_" + ppe) != "yes") {
 	alert('You must have given informed consent to participate in this study.');
 	document.location.replace("informedconsent.html?ppn="+ppn+"&ppl="+ppl+"&ppe="+ppe);
 } else {

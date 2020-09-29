@@ -686,7 +686,7 @@ var instructionsProduction = {
 	//	),
 	pages: [
 		'<p><b>Task: Name the pictures</b></p>' +
-		'<p>In the following, you will be shown images of everyday objects. Your job is to spontaneously name each object in English by typing it into the text box to the right of the image. As you fill in the name, another text box will pop up beneath that. If you can think of another way to name the object, please fill in that other name in the new text box. This will continue until you run out of names for this particular object. Whenever that happens, feel free to move on to the next object by hitting \'Continue\'.</p>',
+		'<p>In the following, you will be shown images of everyday objects. Your job is to spontaneously name each object in English by typing it into the text box to the right of the image. As you fill in the name, another text box will pop up beneath that. If you can think of another way to name the object, please fill in that other name in the new text box. This will continue until you run out of names for this particular object. Whenever that happens, feel free to move on to the next object by hitting \'Continue\'. Should you be unable to give a name for any given picture (e.g., because you cannot recognise or name the object), please indicate so by leaving the response boxes blank and choosing the appropriate option below.</p>',
 		'<p><b>Task: Name the pictures</b></p>' +
 		'<p>What is critical is that, in doing this, you put down the names of the object in the order that they occur to you.</p>' +
 		'<p>So, please put down what occurs to you first in the very top box, then put down what occurs to you second in the second box, and so on and so forth.</p>' +

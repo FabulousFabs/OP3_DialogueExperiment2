@@ -212,7 +212,7 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
     var container = $(
       '<div id="consent-form">' +
         '<div id="consent-header"><img src="donders_logo.svg" id="donders-logo" width="30%" height="30%" style="float: left;" /><b><font color="red">Donders Centre for Cognition</font></b><br /><b>Informed Consent for Behavioural Online Studies</b><br />To be filled out by the participant prior to the start of the experiment.<br /><br /></div>' +
-        '<div id="consent-information" align="left" style="font-size: 11px; line-height: 12px;">' +
+        '<div id="consent-information" align="left" style="font-size: 12px; line-height: 12px;">' +
           '<p style="color: red; font-size: 12px;">INFORMATION</p><br />' +
           '<p style="color: red;">General Information (version 2.1, April 2020)</p>' +
           '<p>This study is part of the research of the Donders Centre of Cognition (DCC). This centre is part of the Donders Institute, Radboud University Nijmegen. For our research we need volunteers to participate in various experiments, e.g. language, perception, action or memory tasks.</p><br />' +
@@ -235,14 +235,14 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
           '<p style="color: red;">CONSENT FORM</p><br />' +
           '<p><b>By ticking on the box "YES"</b></p>' +
           '<p>' +
-            '<div id="consent-text-confirm" align="left" style="font-size: 11px;">I confirm that:' +
+            '<div id="consent-text-confirm" align="left" style="font-size: 12px;">I confirm that:' +
               '<ul>' +
                 '<li>I was satisfactorily informed about the study in writing, by means of the general information, version 2.1, April 2020.</li>' +
                 '<li>I have carefully considered my participation in the experiment.</li>' +
                 '<li>I participate voluntarily.</li>' +
               '</ul>' +
             '</div>' +
-            '<div id="consent-text-agree" align="left" style="font-size: 11px;">I agree that:' +
+            '<div id="consent-text-agree" align="left" style="font-size: 12px;">I agree that:' +
               '<ul>' +
                 '<li>My research data will be acquired and stored for scientific purposes until 10 years after the research has been finalized.</li>' +
                 //'<li>Audio recordings are made to enable coding of the responses.</li>' +
@@ -251,7 +251,7 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
                 '<li>Regulatory authorities can access my data for verification purposes.</li>' +
               '</ul>' +
             '</div>' +
-            '<div id="consent-text-understand" align="left" style="font-size: 11px;">I understand that:' +
+            '<div id="consent-text-understand" align="left" style="font-size: 12px;">I understand that:' +
               '<ul>' +
                 '<li>I have the right to withdraw from the experiment at any time without having to give a reason.</li>' +
                 '<li>There is no connection between my personal data used for payment and research data.</li>' +
@@ -261,7 +261,7 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
             '</div>' +
           '</p><br />' +
           '<p>' +
-            '<div id="consent-question-study" align="left" style="font-size: 11px;">' +
+            '<div id="consent-question-study" align="left" style="font-size: 12px;">' +
               'I give my consent to take part in this experiment' +
               '<span style="float: right;">' +
                 '<input type="checkbox" id="consent-question-agree-yes" name="consent-question-agree" value="YES">' +
@@ -302,7 +302,7 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
           '</p>' +*/
           '<p style="float: right;"><i>* when filling out no, you won’t be redirected to the experiment</i></p>' +
         '</div>' +
-        '<div id="controls" align="center" style="font-size: 11px;">' +
+        '<div id="controls" align="center" style="font-size: 12px;">' +
             '<br /> <br /><button id="btn-done" class="jspsych-btn">Submit</button>' +
         '</div><br />'
     );
