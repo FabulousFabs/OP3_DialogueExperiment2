@@ -5,7 +5,7 @@ jsPsych.plugins['pilot-production'] = (function(){
 	var txt = {
 		btnContinue: 'Continue',
 		dutchName: 'Dutch name',
-		englishName: 'English name',
+		englishName: 'Name',
 		name: 'Name'
 	};
 
@@ -84,24 +84,26 @@ jsPsych.plugins['pilot-production'] = (function(){
 			id: trial.realId,
 			imgDir: trial.imgDir,
 			imgFile: trial.imgFile,
-			nameDutch: [],
+			//nameDutch: [],
 			namesEnglish: [],
+			hasTrouble: 0,
 			typeS: trial.typeS
 		};
 
-		var responseBoxes = (trial.ppl == 1 ? -1 : 0);
+		//var responseBoxes = (trial.ppl == 1 ? -1 : 0);
+		var responseBoxes = 0;
 		var handleBoxes = function(box_text){
 			if (responseBoxes >= maxResponses) { return; }
 
 			responseBoxes += 1;
 
 			if (box_text === undefined || typeof box_text != 'string') {
-				box_text = (trial.ppl == 1 ? txt.englishName : txt.name) + ' #' + responseBoxes;
+				box_text = (trial.ppl == 1 ? txt.englishName : txt.name) + ' #' + responseBoxes + ' (<i>if any</i>)';
 			}
 
 			boxes.find('input').off();
 			var newBox = $(
-				'<label for="responseBox' + responseBoxes + '">' + box_text + ':</label>&nbsp;<input type="text" id="responseBox' + responseBoxes + '" name="responseBox' + responseBoxes + '" class="pilot-response-box" value="" /><br/>'
+				'<label for="responseBox' + responseBoxes + '">' + box_text + ':</label>&nbsp;<input type="text" id="responseBox' + responseBoxes + '" name="responseBox' + responseBoxes + '" class="pilot-response-box" value="" autocomplete="off" /><br/>'
 			);
 			newBox.appendTo(boxes);
 			newBox.on('focus', handleBoxes);
@@ -113,17 +115,65 @@ jsPsych.plugins['pilot-production'] = (function(){
 			jsPsych.finishTrial(data);
 		};
 
+		var handleCheckbox = function() {
+      // in the handler, 'this' refers to the box clicked on
+      var $box = $(this);
+      if ($box.is(":checked")) {
+        // the name of the box is retrieved using the .attr() method
+        // as it is assumed and expected to be immutable
+        var group = "input:checkbox[name='" + $box.attr("name") + "']";
+        // the checked state of the group/box on the other hand will change
+        // and the current value is retrieved using .prop() method
+        $(group).prop("checked", false);
+        $box.prop("checked", true);
+      } else {
+        $box.prop("checked", false);
+      }
+    };
+
 		var handleContinue = function(){
 			boxes.find('input').prop('disabled', true);
 			btnContinue.prop('disabled', true);
+			checkBoxes.prop('disabled', true);
 
 			boxes.find('input').each(function(i, el){
-				if (trial.ppl == 1 && i == 0) {
-					data.nameDutch = $(el).val();
-				} else {
-					data.namesEnglish.push($(el).val());
-				}
+				//if (trial.ppl == 1 && i == 0) {
+				//	data.nameDutch = $(el).val();
+				//} else {
+				//	data.namesEnglish.push($(el).val());
+				//}
+
+				data.namesEnglish.push($(el).val());
 			});
+
+			data.hasTrouble = $('input[name="has-trouble"]:checked').val();
+
+			if (typeof(data.hasTrouble) === undefined || ![1, 2, '1', '2'].includes(data.hasTrouble)) {
+				data.hasTrouble = 0;
+				//alert(data.hasTrouble);
+			}
+
+			if (data.namesEnglish[0].length == 0 && data.hasTrouble == 0) {
+				alert('Please, either name the picture or indicate that you are having trouble.');
+				boxes.find('input').prop('disabled', false);
+				btnContinue.prop('disabled', false);
+				checkBoxes.prop('disabled', false);
+				data.namesEnglish = [];
+				return;
+			}
+
+			//alert(data.namesEnglish.length);
+			//alert(data.namesEnglish[0].length);
+			//return;
+
+			//if (data.namesEnglish[0].length <= 1 && data.hasTrouble == 0) {
+			//	alert('Please, either name the picture or indicate that you are having trouble.');
+			//	alert(data.namesEnglish[0]);
+			//	boxes.find('input').prop('disabled', false);
+			//	btnContinue.prop('disabled', false);
+			//	checkBoxes.prop('disabled', false);
+			//	return;
+			//}
 
 			endTrial();
 		};
@@ -135,34 +185,45 @@ jsPsych.plugins['pilot-production'] = (function(){
 					'<div id="stimulus-container" align="left" style="float: left; width: 350px;">' +
 						'<img id="stimulus" src="" />' +
 					'</div>' +
+					'<div id="instructions" align="right" style="float: right; font-size: 14px; width: 250px;"></div>' +
 					'<div id="boxes" align="right" style="float: right; width: 250px;">' +
-						'<br /><br /><br /><br /><br />' +
+						'' +
 					'</div>' +
-				'</div>' +
-				'<div id="controls" style="float: none;">' +
-					'<p><button id="btn-continue" class="jspsych-btn" style="margin-top: 25px;">' + txt.btnContinue + '</button></p>' +
+					'<div id="alternative" align="right" style="float: right; font-size: 11px; width: 250px;">' +
+						'<br />If you are having trouble, please indicate:<br />' +
+						'<label for="">I don\'t recognize the object.</label>&nbsp;<input type="checkbox" id="has-trouble" name="has-trouble" value="1"><br />' +
+						'<label for="">I can\'t name the object.</label>&nbsp;<input type="checkbox" id="has-trouble" name="has-trouble" value="2">' +
+					'</div>' +
+					'<div id="controls" align="center" style="float: right; width: 250px;">' +
+						'<button id="btn-continue" class="jspsych-btn">' + txt.btnContinue + '</button>' +
+					'</div>' +
 				'</div>' +
 			'</div>'
 		);
 
 		var instructions = container.find('#instruction');
+		var instructions2 = container.find('#instructions');
 		var stimulus = container.find('#stimulus');
 		var boxes = container.find('#boxes');
 		var btnContinue = container.find('#btn-continue');
+		var checkBoxes = container.find('input:checkbox');
 
 		display_element.innerHTML = '';
 		container.appendTo(display_element);
 
-		instructions.html("<b>Picture Naming:</b> " + trial.index + "  of " + trial.final + "<p style='font-size: 12px;'>How would you name this picture?</p>");
+		instructions.html("<b>Picture Naming:</b> " + trial.index + "  of " + trial.final);
+		instructions2.html("<br /><br /><br /><b>How would you name this picture?</b>");
 		stimulus.attr('src', trial.imgDir + "/" + trial.imgFile);
 		btnContinue.on('click', handleContinue);
+		checkBoxes.on('click', handleCheckbox);
 
-		if (trial.ppl == 1) {
-			handleBoxes(txt.dutchName);
-			handleBoxes(txt.englishName);
-		} else {
-			handleBoxes(txt.name);
-		}
+		handleBoxes(txt.name);
+		//if (trial.ppl == 1) {
+		//	handleBoxes(txt.dutchName);
+		//	handleBoxes(txt.englishName);
+		//} else {
+		//	handleBoxes(txt.name);
+		//}
 	};
 
 	return plugin;
@@ -173,7 +234,7 @@ jsPsych.plugins['pilot-reception'] = (function(){
 	jsPsych.pluginAPI.registerPreload('pilot-reception', 'stimulus', 'image');
 
 	var txt = {
-		Q1: '1) Was this your preferred name for the object earlier?',
+		Q1: '1) Is this how you would name the object?',
 		Q2: '2) Do you know this word?',
 		Q3: '3) Do you think this is an appropriate name for the picture?',
 		Q4: '4) Do you think this is primarily an American or British English word?',
@@ -182,6 +243,7 @@ jsPsych.plugins['pilot-reception'] = (function(){
 		A2: 'American English',
 		A3: 'British English',
 		A4: 'Both/Neither',
+		A5: 'Don\'t know',
 		btnContinue: 'Continue'
 	};
 
@@ -294,6 +356,10 @@ jsPsych.plugins['pilot-reception'] = (function(){
 			cb2_label.html('');
 			cb1_input.val('');
 			cb2_input.val('');
+			cb3_label.html('');
+			cb4_label.html('');
+			cb3_input.val('');
+			cb4_input.val('');
 		};
 
 		var handleUnselect = function() {
@@ -305,7 +371,7 @@ jsPsych.plugins['pilot-reception'] = (function(){
 
 			if (typeof(data.choseWord) === undefined || ![txt.A0, txt.A1].includes(data.choseWord)) {
 				data.choseWord = -1;
-				alert('Please, indicate whether or not this is how you named the picture earlier.');
+				alert('Please, indicate whether or not this is how you would name the picture.');
 				return;
 			}
 
@@ -328,11 +394,15 @@ jsPsych.plugins['pilot-reception'] = (function(){
 				cb1_label.html("&nbsp;" + txt.A2);
 				cb2_label.html("&nbsp;" + txt.A3);
 				cb3_label.html("&nbsp;" + txt.A4);
+				cb4_label.html("&nbsp;" + txt.A5);
 				cb3_label.show();
+				cb4_label.show();
 				cb1_input.val(txt.A2);
 				cb2_input.val(txt.A3);
 				cb3_input.val(txt.A4);
+				cb4_input.val(txt.A5);
 				cb3_input.show();
+				cb4_input.show();
 				btnContinue.on('click', handleQ4);
 				btnContinue.prop('disabled', false);
 			}
@@ -384,11 +454,15 @@ jsPsych.plugins['pilot-reception'] = (function(){
 				cb1_label.html("&nbsp;" + txt.A2);
 				cb2_label.html("&nbsp;" + txt.A3);
 				cb3_label.html("&nbsp;" + txt.A4);
+				cb4_label.html("&nbsp;" + txt.A5);
 				cb3_label.show();
+				cb4_label.show();
 				cb1_input.val(txt.A2);
 				cb2_input.val(txt.A3);
 				cb3_input.val(txt.A4);
+				cb4_input.val(txt.A5);
 				cb3_input.show();
+				cb4_input.show();
 				btnContinue.on('click', handleQ4);
 				btnContinue.prop('disabled', false);
 			} else {
@@ -399,7 +473,7 @@ jsPsych.plugins['pilot-reception'] = (function(){
 		var handleQ4 = function() {
 			data.abeWord = $('input[name="p-rcp-cb"]:checked').val();
 
-			if (typeof(data.abeWord) === undefined || ![txt.A2, txt.A3, txt.A4].includes(data.abeWord)) {
+			if (typeof(data.abeWord) === undefined || ![txt.A2, txt.A3, txt.A4, txt.A5].includes(data.abeWord)) {
 				data.abeWord = -1;
 				alert('Please, indicate whether you think this is primarily an American or British English term.');
 				return;
@@ -410,7 +484,7 @@ jsPsych.plugins['pilot-reception'] = (function(){
 			handleClear();
 			handleUnselect();
 
-			data.abeWord = data.abeWord == txt.A2 ? 0 : data.abeWord == txt.A3 ? 1 : 2; // 0 = AE, 1 = BE, 2 = b/n, -1 no entry
+			data.abeWord = data.abeWord == txt.A2 ? 0 : data.abeWord == txt.A3 ? 1 : data.abeWord == txt.A4 ? 2 : 3; // 0 = AE, 1 = BE, 2 = b/n, 3 = dk, -1 no entry
 
 			endTrial();
 		};
@@ -434,7 +508,8 @@ jsPsych.plugins['pilot-reception'] = (function(){
 						'<p align="center" id="p-rcp-q"></p>' +
 						'<input type="checkbox" id="p-rcp-a1-cb" name="p-rcp-cb" value=""><label for="p-rcp-a1-cb" id="p-rcp-a1-lb"></label><br/>' +
 						'<input type="checkbox" id="p-rcp-a2-cb" name="p-rcp-cb" value=""><label for="p-rcp-a2-cb" id="p-rcp-a2-lb"></label><br/>' +
-						'<input type="checkbox" id="p-rcp-a3-cb" name="p-rcp-cb" value=""><label for="p-rcp-a3-cb" id="p-rcp-a3-lb"></label>' +
+						'<input type="checkbox" id="p-rcp-a3-cb" name="p-rcp-cb" value=""><label for="p-rcp-a3-cb" id="p-rcp-a3-lb"></label><br />' +
+						'<input type="checkbox" id="p-rcp-a4-cb" name="p-rcp-cb" value=""><label for="p-rcp-a4-cb" id="p-rcp-a4-lb"></label>' +
 					'</div>' +
 				'</div>' +
 				'<div id="controls" style="float: none;">' +
@@ -451,9 +526,11 @@ jsPsych.plugins['pilot-reception'] = (function(){
 		var cb1_label = boxes.find('#p-rcp-a1-lb');
 		var cb2_label = boxes.find('#p-rcp-a2-lb');
 		var cb3_label = boxes.find('#p-rcp-a3-lb');
+		var cb4_label = boxes.find('#p-rcp-a4-lb');
 		var cb1_input = boxes.find('#p-rcp-a1-cb');
 		var cb2_input = boxes.find('#p-rcp-a2-cb');
 		var cb3_input = boxes.find('#p-rcp-a3-cb');
+		var cb4_input = boxes.find('#p-rcp-a4-cb');
 		var checkBoxes = container.find('input:checkbox');
 		var btnContinue = container.find('#btn-continue');
 
@@ -469,10 +546,14 @@ jsPsych.plugins['pilot-reception'] = (function(){
 		cb2_label.html("&nbsp;" + txt.A1);
 		cb3_label.html('');
 		cb3_label.hide();
+		cb4_label.html('');
+		cb4_label.hide();
 		cb1_input.val(txt.A0);
 		cb2_input.val(txt.A1);
 		cb3_input.val('');
 		cb3_input.hide();
+		cb4_input.val('');
+		cb4_input.hide();
 		btnContinue.on('click', handleQ1);
 	};
 
@@ -491,6 +572,12 @@ if (ppn === undefined) {
 var ppl = jsPsych.data.urlVariables()['ppl']
 if (ppl === undefined) {
 	ppl = 0;
+}
+
+// Get experiment mode
+var ppe = jsPsych.data.urlVariables()['ppe']
+if (ppe === undefined) {
+	ppe = 'P';
 }
 
 // Couple of helper functions (adopted from Wilbert but made a tad more efficient here and there)
@@ -515,7 +602,7 @@ function addCompletedImage(type, id) {
 }
 
 function saveData(data, ppn, ppl) {
-		var type = data.trial_type == 'pilot-production' ? 'prod' : 'recp';
+		var type = data.trial_type == 'pilot-production' ? 'prod' : data.trial_type == 'pilot-reception' ? 'recp' : data.trial_type == 'html-button-response' ? 'dict' : 'dump';
     var filename  = type + "_" + ppl + "_" + ppn + "_trials.dat" // server adds datetime
     var jsonData = JSON.stringify(data);
 	$.ajax({
@@ -564,8 +651,8 @@ var instructionsGeneral = {
 	pages: [
 		'<p><b>General Instructions</b></p>' +
 		'<p>Again, thanks very much for your interest in participating in this study.</p>' +
-		'<p>In the following, you will have to complete two tasks. Detailed explanations of what you have to do will be given prior to each task.</p>' +
-		'<p>For now, please keep in mind that, during the entire experiment (i.e., during both tasks), you cannot make use of a dictionary or any other such resources. This is because we are interested in your particular use of language rather than correct responses. In fact, there are no right or wrong answers in this experiment and a lack of a response will be more helpful to us than a response that was looked up.</p>'
+		'<p>In the following, you will have to complete a task and a questionnaire. Detailed explanations of what you have to do will be given prior to each.</p>' +
+		'<p>For now, please keep in mind that, during the entire experiment (i.e., during both assignments), you cannot make use of a dictionary or any other such resources. This is because we are interested in your particular use of language rather than correct responses. In fact, there are no right or wrong answers in this experiment and a lack of a response will be more helpful to us than a response that was looked up.</p>'
 	],
 	show_clickable_nav: true,
 	button_label_next: 'Next',
@@ -574,29 +661,37 @@ var instructionsGeneral = {
 
 var instructionsProduction = {
 	type: 'instructions',
-	pages:
-		(
-			ppl == 0 ?
-				[
-					'<p><b>Task 1 of 2: Name the pictures</b></p>' +
-					'<p>In the following, you will be shown images of everyday objects. Your job is to name each object spontaneously by typing it into the text box to the right of the image. As you fill in the name, another text box will pop up beneath that. If you can think of another way to name the object, please fill in that other name in the new text box. This will continue until you run out of names for this particular object. Whenever that happens, feel free to move on to the next object by hitting \'Continue\'.</p>',
-					'<p><b>Task 1 of 2: Name the pictures</b></p>' +
-					'<p>What is critical is that, in doing this, you put down the names of the object in the order that they occur to you.</p>' +
-					'<p>So, please put down what occurs to you first in the very top box, then put down what occurs to you second in the second box, and so on and so forth.</p>' +
-					'<p>Please hit \'Next\' whenever you are ready to start with task one.</p>'
-				]
-				:
-				[
-					'<p><b>Task 1 of 2: Name the pictures</b></p>' +
-					'<p>In the following, you will be shown images of everyday objects. Your job is twofold:</p>' +
-					'<p>First, please fill in the text box to the right with the Dutch name of the object. For example, if you see a picture of a <i>wallet</i>, fill in <i>portemonnee</i>.</p>' +
-					'<p>Secondly, in the text box below that, name the object spontaneously in English. As you fill in the name, another text box will pop up beneath that. If you can think of another way to name the object in English, please fill in that other name in the new text box. This will continue until you run out of names for this particular object. Whenever that happens, feel free to move on to the next object by hitting \'Continue\'.</p>',
-					'<p><b>Task 1 of 2: Name the pictures</b></p>' +
-					'<p>What is critical is that, in doing this, you put down the English names of the object in the order that they occur to you.</p>' +
-					'<p>So, please put down what occurs to you first in the very top English box, then put down what occurs to you second in the second box, and so on and so forth.</p>' +
-					'<p>Please hit \'Next\' whenever you are ready to start.</p>'
-				]
-		),
+	//pages:
+	//	(
+	//		ppl == 0 ?
+	//			[
+	//				'<p><b>Task: Name the pictures</b></p>' +
+	//				'<p>In the following, you will be shown images of everyday objects. Your job is to name each object spontaneously by typing it into the text box to the right of the image. As you fill in the name, another text box will pop up beneath that. If you can think of another way to name the object, please fill in that other name in the new text box. This will continue until you run out of names for this particular object. Whenever that happens, feel free to move on to the next object by hitting \'Continue\'.</p>',
+	//				'<p><b>Task: Name the pictures</b></p>' +
+	//				'<p>What is critical is that, in doing this, you put down the names of the object in the order that they occur to you.</p>' +
+	//				'<p>So, please put down what occurs to you first in the very top box, then put down what occurs to you second in the second box, and so on and so forth.</p>' +
+	//				'<p>Please hit \'Next\' whenever you are ready to start with task one.</p>'
+	//			]
+	//			:
+	//			[
+	//				'<p><b>Task: Name the pictures</b></p>' +
+	//				'<p>In the following, you will be shown images of everyday objects. Your job is twofold:</p>' +
+	//				'<p>First, please fill in the text box to the right with the Dutch name of the object. For example, if you see a picture of a <i>wallet</i>, fill in <i>portemonnee</i>.</p>' +
+	//				'<p>Secondly, in the text box below that, name the object spontaneously in English. As you fill in the name, another text box will pop up beneath that. If you can think of another way to name the object in English, please fill in that other name in the new text box. This will continue until you run out of names for this particular object. Whenever that happens, feel free to move on to the next object by hitting \'Continue\'.</p>',
+	//				'<p><b>Task: Name the pictures</b></p>' +
+	//				'<p>What is critical is that, in doing this, you put down the English names of the object in the order that they occur to you.</p>' +
+	//				'<p>So, please put down what occurs to you first in the very top English box, then put down what occurs to you second in the second box, and so on and so forth.</p>' +
+	//				'<p>Please hit \'Next\' whenever you are ready to start.</p>'
+	//			]
+	//	),
+	pages: [
+		'<p><b>Task: Name the pictures</b></p>' +
+		'<p>In the following, you will be shown images of everyday objects. Your job is to spontaneously name each object in English by typing it into the text box to the right of the image. As you fill in the name, another text box will pop up beneath that. If you can think of another way to name the object, please fill in that other name in the new text box. This will continue until you run out of names for this particular object. Whenever that happens, feel free to move on to the next object by hitting \'Continue\'.</p>',
+		'<p><b>Task: Name the pictures</b></p>' +
+		'<p>What is critical is that, in doing this, you put down the names of the object in the order that they occur to you.</p>' +
+		'<p>So, please put down what occurs to you first in the very top box, then put down what occurs to you second in the second box, and so on and so forth.</p>' +
+		'<p>Please hit \'Next\' whenever you are ready to start with task one.</p>'
+	],
 	show_clickable_nav: true,
 	button_label_next: 'Next',
 	button_label_previous: 'Previous'
@@ -605,7 +700,7 @@ var instructionsProduction = {
 var practiceProduction = {
 	type: 'instructions',
 	pages: [
-		'<p><b>Task 1 of 2: Name the pictures</b></p>' +
+		'<p><b>Task: Name the pictures</b></p>' +
 		'<p>The following three trials will be practice trials so you can familiarise yourself with the procedure.</p>' +
 		'<p>There will be a brief break after the practice trials before the task continues.</p>' +
 		'<p>Please hit \'Start\’ whenever you are ready.</p>'
@@ -618,9 +713,9 @@ var practiceProduction = {
 var exitProduction = {
 	type: 'instructions',
 	pages: [
-		'<p><b>Task 1 of 2: Completed.</b></p>' +
-		'<p>You have completed the first task. Please take a quick break before continuing with the experiment.</p>' +
-		'<p>Whenever you are ready, hit \'Continue\' to move on to the next task.</p>'
+		'<p><b>Task: Completed.</b></p>' +
+		'<p>You have completed this task. Please take a quick break before continuing.</p>' +
+		'<p>Whenever you are ready, hit \'Continue\' to move on.</p>'
 	],
 	show_clickable_nav: true,
 	button_label_next: 'Continue',
@@ -630,13 +725,9 @@ var exitProduction = {
 var instructionsReception = {
 	type: 'instructions',
 	pages: [
-		'<p><b>Task 2 of 2: Name rating</b></p>' +
-		'<p>In the following, some of the pictures you have already seen in part one will be presented on the left. On the right, you will be offered a name for that object. Your task will then be to classify that name for this particular object as follows:</p>' +
-		'<p>First, is this how I named the picture in the previous task? If no, continue. If yes, skip to four.</p>' +
-		'<p>Secondly, do you know the particular word? If yes, continue.</p>' +
-		'<p>Thirdly, do you think this is an appropriate word for this picture? If yes, continue.</p>' +
-		'<p>Lastly, do you think this word is primarily used in American or British English or both/neither?</p>',
-		'<p><b>Task 2 of 2: Name rating</b></p>' +
+		'<p><b>Task: Name rating</b></p>' +
+		'<p>In the following, pictures of everyday objects will be presented on the left. On the right, you will be offered a name for that object. Your task will then be to classify that name for this particular object through a series of (up to) four questions per object/word.</p>',
+		'<p><b>Task: Name rating</b></p>' +
 		'<p>Please remember that you cannot make use of a dictionary or any other such resources in this task, too. This is because we are interested in your particular use of language rather than correct responses. In fact, there are no right or wrong answers in this experiment and a lack of a response will be more helpful to us than a response that was looked up.</p>'
 	],
 	show_clickable_nav: true,
@@ -647,9 +738,9 @@ var instructionsReception = {
 var exitReception = {
 	type: 'instructions',
 	pages: [
-		'<p><b>Task 2 of 2: Completed.</b></p>' +
-		'<p>You have completed the second part of the experiment. Thanks very much!</p>' +
-		'<p>It is vital that you do not leave yet, although you may take a short break if you want to.</p>'
+		'<p><b>Task: Completed.</b></p>' +
+		'<p>You have completed this task. Please take a quick break before continuing.</p>' +
+		'<p>Whenever you are ready, hit \'Continue\' to move on.</p>'
 	],
 	show_clickable_nav: true,
 	button_label_next: 'Continue',
@@ -659,9 +750,9 @@ var exitReception = {
 var exitTasks = {
 	type: 'instructions',
 	pages: [
-		'<p><b>Tasks completed</b></p>' +
-		'<p>You have completed both tasks. Thanks!</p>' +
+		'<p><b>Almost there</b></p>' +
 		'<p>Before you go, please take a couple of minutes to fill in the questionnaire on the following pages.</p>' +
+		'<p>Please note that you must complete the questionnaire to receive credit/compensation.</p>' +
 		'<p>Whenever you are ready, please hit \'To the questionnaire\'.</p>'
 	],
 	show_clickable_nav: true,
@@ -670,7 +761,7 @@ var exitTasks = {
 };
 
 var moveOn = function() {
-	document.location.replace("questionnaire.html?ppn="+ppn+"&ppl="+ppl);
+	document.location.replace("questionnaire.html?ppn="+ppn+"&ppl="+ppl+"&ppe="+ppe);
 };
 
 var questionnaire = {
@@ -706,6 +797,13 @@ var instructionsBlock = {
 	button_label_previous: 'Previous'
 };
 
+var resourceCheck = {
+	type: 'html-button-response',
+	stimulus: '<p>Did you use a dictionary or any additional resources during the experiment? Please answer truthfully. Whether or not you did will not have any effect on your participation in this study or your compensation, but will be critical for data analyses.</p>',
+	choices: ['No, I did not use any resources.', 'Yes, I did use some additional resources.'],
+	prompt: ''
+}
+
 // Setup experiment
 var timeline = [];
 var preload = [];
@@ -713,7 +811,7 @@ var imgDir = "resources";
 
 timeline.push(instructionsGeneral);
 
-if (relevantStimuliProduction.length > 0) {
+if (relevantStimuliProduction.length > 0 && ppe == 'P') {
 	timeline.push(instructionsProduction);
 
 	var blockLast = relevantStimuliProduction[0][1];
@@ -743,10 +841,11 @@ if (relevantStimuliProduction.length > 0) {
 		});
 	});
 
-	timeline.push(exitProduction);
+	//timeline.push(exitProduction);
+	timeline.push(resourceCheck);
 }
 
-if (relevantStimuliReception.length > 0) {
+if (relevantStimuliReception.length > 0 && ppe == 'R') {
 	timeline.push(instructionsReception);
 
 	var blockLastR = relevantStimuliReception[0][1];
@@ -776,7 +875,8 @@ if (relevantStimuliReception.length > 0) {
 		});
 	});
 
-	timeline.push(exitReception);
+	//timeline.push(exitReception);
+	timeline.push(resourceCheck);
 }
 
 if (relevantStimuliProduction.length <= 0 && relevantStimuliReception.length <= 0) {
@@ -787,9 +887,9 @@ if (relevantStimuliProduction.length <= 0 && relevantStimuliReception.length <= 
 timeline.push(exitTasks);
 timeline.push(questionnaire);
 
-if (localStorage.getItem("informedConsentGiven_pilot") != "yes") {
+if (localStorage.getItem("informedConsentGiven_pilot_" + ppe) != "yes") {
 	alert('You must have given informed consent to participate in this experiment.');
-	document.location.replace("informedconsent.html?ppn="+ppn+"&ppl="+ppl);
+	document.location.replace("informedconsent.html?ppn="+ppn+"&ppl="+ppl+"&ppe="+ppe);
 } else {
 	jsPsych.init({
 		timeline: timeline,

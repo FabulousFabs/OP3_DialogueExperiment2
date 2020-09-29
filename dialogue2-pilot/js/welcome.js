@@ -12,6 +12,12 @@ if (ppl === undefined) {
 	ppl = 0;
 }
 
+// Get experiment mode
+var ppe = jsPsych.data.urlVariables()['ppe']
+if (ppe === undefined) {
+	ppe = 'P';
+}
+
 // Initialise timeline
 var greetings = {
 	type: 'instructions',
@@ -34,7 +40,7 @@ var greetings = {
 var forward = {
 	type: 'call-function',
 	func: function(){
-		document.location.replace("informedconsent.html?ppn=" + ppn + "&ppl=" + ppl);
+		document.location.replace("informedconsent.html?ppn=" + ppn + "&ppl=" + ppl + "&ppe=" + ppe);
 	},
 };
 

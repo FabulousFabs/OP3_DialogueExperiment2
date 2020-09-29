@@ -94,7 +94,7 @@ jsPsych.plugins['donders-style-informed-consent'] = (function(){
         return;
       }*/
 
-      var filename = "informed_consent.dat";
+      var filename = ppe + "_informed_consent.dat";
 
       $.ajax({
         type: 'POST',
@@ -419,6 +419,12 @@ if (ppl === undefined) {
 	ppl = 0;
 }
 
+// Get experiment mode
+var ppe = jsPsych.data.urlVariables()['ppe']
+if (ppe === undefined) {
+	ppe = 'P';
+}
+
 var consent = {
   type: 'donders-style-informed-consent',
   audio_recordings: false,
@@ -426,8 +432,8 @@ var consent = {
 };
 
 var moveOn = function() {
-  localStorage.setItem("informedConsentGiven_pilot", "yes");
-  document.location.replace("experiment.html?ppn="+ppn+"&ppl="+ppl);
+  localStorage.setItem("informedConsentGiven_pilot_" + ppe, "yes");
+  document.location.replace("experiment.html?ppn="+ppn+"&ppl="+ppl+"&ppe="+ppe);
 }
 
 var setConsent = {
@@ -440,7 +446,7 @@ var timeline = [];
 timeline.push(consent);
 timeline.push(setConsent);
 
-if (localStorage.getItem("informedConsentGiven_pilot") != "yes") {
+if (localStorage.getItem("informedConsentGiven_pilot_" + ppe) != "yes") {
   jsPsych.init({
       timeline: timeline
   });

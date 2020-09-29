@@ -1527,17 +1527,23 @@ if (ppl === undefined) {
 	ppl = 0;
 }
 
+// Get experiment mode
+var ppe = jsPsych.data.urlVariables()['ppe']
+if (ppe === undefined) {
+	ppe = 'P';
+}
+
 // couple of helper functions
 function hasCompletedQuestionnaire() {
-	return localStorage.getItem("pilot_questionnaire_done") == "yes";
+	return localStorage.getItem("pilot_questionnaire_done_" + ppe) == "yes";
 }
 
 function completeQuestionnaire() {
-	localStorage.setItem("pilot_questionnaire_done", "yes");
+	localStorage.setItem("pilot_questionnaire_done_" + ppe, "yes");
 }
 
-function saveData(data, ppn, ppl) {
-    var filename  = "questionnaires_" + ppl + ".dat" // server adds datetime
+function saveData(data, ppn, ppl, ppe) {
+    var filename  = ppe + "_questionnaires_" + ppl + ".dat" // server adds datetime
     var jsonData = JSON.stringify(data);
 	$.ajax({
 		type: 'POST',
@@ -1594,7 +1600,7 @@ timeline.push(finishStudy);
 
 if (localStorage.getItem("informedConsentGiven_pilot") != "yes") {
 	alert('You must have given informed consent to participate in this study.');
-	document.location.replace("informedconsent.html?ppn="+ppn+"&ppl="+ppl);
+	document.location.replace("informedconsent.html?ppn="+ppn+"&ppl="+ppl+"&ppe="+ppe);
 } else {
-	jsPsych.init({ timeline: timeline, on_data_update: function(data){ saveData(data, ppn, ppl); } });
+	jsPsych.init({ timeline: timeline, on_data_update: function(data){ saveData(data, ppn, ppl, ppe); } });
 }
